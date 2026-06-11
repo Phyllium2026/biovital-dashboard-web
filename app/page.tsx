@@ -1,208 +1,229 @@
-const API_URL =
-  "https://script.google.com/macros/s/AKfycbxlJ54EDwB8EeU9mQD06Iz_63jKP4DiST_xnj-U616eSLQb8TtwWUwPOBAyXEERFTlN/exec";
+'use client';
 
-async function getData(view: string) {
-  const response = await fetch(`${API_URL}?view=${view}&anio=2026`, {
-    cache: "no-store",
-  });
+import { useMemo, useState } from 'react';
+import Image from 'next/image';
+import './globals.css';
 
-  return response.json();
-}
+type Registro = {
+  id: string;
+  anio: string;
+  predio: string;
+  compromiso: string;
+  eecc: string;
+  especie: string;
+  estado: string;
+  censos: number;
+  vivos: number;
+  muertos: number;
+  avance: number;
+};
 
-function normalizarLista(data: any) {
-  if (Array.isArray(data)) return data;
-  if (Array.isArray(data?.data)) return data.data;
-  if (Array.isArray(data?.resultados)) return data.resultados;
-  if (Array.isArray(data?.items)) return data.items;
-  return [];
-}
+const DATA: Registro[] = [
+  {
+    id: 'BIO-2026-001',
+    anio: '2026',
+    predio: 'Monte Aranda',
+    compromiso: 'CCPL-1',
+    eecc: 'ABP',
+    especie: 'Porlieria chilensis',
+    estado: 'Operativo',
+    censos: 12,
+    vivos: 940,
+    muertos: 38,
+    avance: 82,
+  },
+  {
+    id: 'BIO-2026-002',
+    anio: '2026',
+    predio: 'Monte Aranda',
+    compromiso: 'CCPL-1',
+    eecc: 'ABP',
+    especie: 'Carica chilensis',
+    estado: 'Seguimiento',
+    censos: 8,
+    vivos: 323,
+    muertos: 21,
+    avance: 74,
+  },
+  {
+    id: 'BIO-2028-001',
+    anio: '2028',
+    predio: 'Monte Aranda',
+    compromiso: 'Enriquecimiento',
+    eecc: 'TKR',
+    especie: 'Porlieria chilensis',
+    estado: 'Planificado',
+    censos: 4,
+    vivos: 949,
+    muertos: 0,
+    avance: 35,
+  },
+];
 
-function obtenerTexto(item: any, campos: string[]) {
-  for (const campo of campos) {
-    if (item?.[campo] !== undefined && item?.[campo] !== "") {
-      return item[campo];
-    }
-  }
-  return "Sin dato";
-}
+export default function Home() {
+  const [loading, setLoading] = useState(true);
 
-function obtenerNumero(item: any, campos: string[]) {
-  for (const campo of campos) {
-    if (item?.[campo] !== undefined && item?.[campo] !== "") {
-      return item[campo];
-    }
-  }
-  return 0;
-}
+  const [anio, setAnio] = useState('Todos');
+  const [predio, setPredio] = useState('Todos');
+  const [compromiso, setCompromiso] = useState('Todos');
+  const [eecc, setEecc] = useState('Todos');
 
-export default async function Home() {
-  const kpis = await getData("kpis");
-  const especiesRaw = await getData("especies");
-  const prediosRaw = await getData("predios");
+  setTimeout(() => setLoading(false), 600);
 
-  const especies = normalizarLista(especiesRaw);
-  const predios = normalizarLista(prediosRaw);
+  const filtrados = useMemo(() => {
+    return DATA.filter((r) => {
+      return (
+        (anio === 'Todos' || r.anio === anio) &&
+        (predio === 'Todos' || r.predio === predio) &&
+        (compromiso === 'Todos' || r.compromiso === compromiso) &&
+        (eecc === 'Todos' || r.eecc === eecc)
+      );
+    });
+  }, [anio, predio, compromiso, eecc]);
 
-  const topEspecies = especies.slice(0, 6);
-  const topPredios = predios.slice(0, 6);
+  const totalCensos = filtrados.reduce((a, b) => a + b.censos, 0);
+  const totalVivos = filtrados.reduce((a, b) => a + b.vivos, 0);
+  const totalMuertos = filtrados.reduce((a, b) => a + b.muertos, 0);
+  const avance =
+    filtrados.length > 0
+      ? Math.round(filtrados.reduce((a, b) => a + b.avance, 0) / filtrados.length)
+      : 0;
 
-  const secundarios = [
-    ["📊", "Prendimiento", `${kpis.prendimientoPromedio}%`],
-    ["🌳", "Predios", kpis.predios],
-    ["🪴", "Especies", kpis.especies],
-    ["⚠️", "A revisión", kpis.registrosRevision],
+  const unique = (key: keyof Registro) => [
+    'Todos',
+    ...Array.from(new Set(DATA.map((r) => String(r[key])))),
   ];
 
-  return (
-    <main style={styles.main}>
-      <section style={styles.panel}>
-        <div style={styles.header}>
-  <div style={styles.headerTop}>
-    <div style={styles.brand}>
-      <img
-        src="/logo-biovital.png"
-        alt="BIOVITAL"
-        style={styles.logo}
-      />
-
-      <div>
-        <p style={styles.label}>BIOVITAL V1</p>
-
-        <h1 style={styles.title}>
-          Dashboard de Replantes Ambientales
-        </h1>
-      </div>
-    </div>
-
-    <a
-      href="https://docs.google.com/forms/d/18tqEnm3dwWAyzlbjDMMlsaJfdWyDmDxBmEC1G7WTAEc/viewform"
-      target="_blank"
-      rel="noopener noreferrer"
-      style={styles.censoButton}
-    >
-      📋 Registrar Censo
-    </a>
-  </div>
-          <p style={styles.label}>BIOVITAL V1</p>
-
-          <h1 style={styles.title}>
-            Centro de Control de Replantes Ambientales
-          </h1>
-
-          <p style={styles.subtitle}>
-            Información operacional para priorizar decisiones de replante.
-          </p>
+  if (loading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-[#071b12] text-white">
+        <div className="text-center">
+          <div className="mx-auto mb-5 h-20 w-20 rounded-3xl bg-white/10 flex items-center justify-center shadow-xl">
+            <Image
+              src="/biovital-logo.png"
+              alt="BIOVITAL"
+              width={54}
+              height={54}
+              priority
+            />
+          </div>
+          <h1 className="text-2xl font-bold tracking-wide">BIOVITAL</h1>
+          <p className="mt-2 text-sm text-emerald-100">Cargando sistema operacional...</p>
         </div>
+      </main>
+    );
+  }
 
-        <section style={styles.heroGrid}>
-          <div style={styles.hero}>
-            <div style={styles.heroIcon}>🌱</div>
+  return (
+    <main className="min-h-screen bg-[#f3f7f1] text-[#102015]">
+      <section className="mx-auto max-w-7xl px-4 py-4 md:py-6">
+        <header className="mb-4 flex items-center justify-between rounded-3xl bg-[#082015] px-4 py-3 text-white shadow-md">
+          <div className="flex items-center gap-3">
+            <div className="h-11 w-11 rounded-2xl bg-white/10 flex items-center justify-center">
+              <Image
+                src="/biovital-logo.png"
+                alt="BIOVITAL"
+                width={34}
+                height={34}
+                priority
+              />
+            </div>
             <div>
-              <p style={styles.heroLabel}>Plantas a Reponer</p>
-              <h2 style={styles.heroValue}>{kpis.plantasReponer}</h2>
-              <p style={styles.heroText}>
-                Demanda total estimada según censos de sobrevivencia validados.
+              <h1 className="text-lg md:text-2xl font-bold leading-none">BIOVITAL V2</h1>
+              <p className="text-xs md:text-sm text-emerald-100">
+                Monitoreo de biodiversidad y compromisos ambientales
               </p>
             </div>
           </div>
 
-          <div style={styles.sideBox}>
-            <div style={styles.sideItem}>
-              <p style={styles.sideLabel}>Compromisos Ambientales</p>
-              <p style={styles.sideValue}>{kpis.compromisos}</p>
-            </div>
+          <a
+            href="#"
+            className="rounded-2xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-emerald-600"
+          >
+            Registrar Censo
+          </a>
+        </header>
 
-            <div style={styles.sideItem}>
-              <p style={styles.sideLabel}>EECC Participantes</p>
-              <p style={styles.sideValue}>{kpis.eecc}</p>
-            </div>
-
-            <div style={styles.sideItem}>
-              <p style={styles.sideLabel}>Registros Incorporados</p>
-              <p style={styles.sideValue}>{kpis.registros}</p>
-            </div>
-          </div>
+        <section className="mb-4 grid grid-cols-2 gap-2 md:grid-cols-4">
+          <Select label="Año" value={anio} options={unique('anio')} onChange={setAnio} />
+          <Select label="Predio" value={predio} options={unique('predio')} onChange={setPredio} />
+          <Select
+            label="Compromiso"
+            value={compromiso}
+            options={unique('compromiso')}
+            onChange={setCompromiso}
+          />
+          <Select label="EECC" value={eecc} options={unique('eecc')} onChange={setEecc} />
         </section>
 
-        <div style={styles.kpiRow}>
-          {secundarios.map(([icon, title, value]) => (
-            <div key={title as string} style={styles.kpiCard}>
-              <div style={styles.kpiIcon}>{icon}</div>
-              <div>
-                <div style={styles.kpiTitle}>{title}</div>
-                <div style={styles.kpiValue}>{value}</div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <section className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+          <Kpi title="Censos" value={totalCensos} />
+          <Kpi title="Vivos" value={totalVivos} />
+          <Kpi title="Bajas" value={totalMuertos} />
+          <Kpi title="Avance" value={`${avance}%`} />
+        </section>
 
-        <section style={styles.twoColumns}>
-          <div style={styles.section}>
-            <div style={styles.sectionHeader}>
-              <h2 style={styles.sectionTitle}>Top especies a reponer</h2>
-              <p style={styles.sectionSubtitle}>
-                Ranking operativo según demanda estimada.
-              </p>
+        <section className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="rounded-3xl bg-white p-4 shadow-sm">
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="font-bold">Vista operacional</h2>
+              <span className="text-xs text-gray-500">{filtrados.length} registros</span>
             </div>
 
-            <div style={styles.table}>
-              <div style={styles.tableHead}>
-                <div>Especie</div>
-                <div style={styles.right}>Plantas</div>
-              </div>
-
-              {topEspecies.map((item: any, index: number) => (
-                <div key={index} style={styles.tableRow}>
-                  <div>
-                    <strong>
-                      {obtenerTexto(item, [
-                        "especie",
-                        "Especie",
-                        "NOMBRE_ESPECIE",
-                        "Nombre_Especie",
-                        "nombre",
-                      ])}
-                    </strong>
+            <div className="space-y-3">
+              {filtrados.map((r) => (
+                <article
+                  key={r.id}
+                  className="rounded-2xl border border-gray-100 bg-[#f8fbf6] p-3"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-xs text-gray-500">{r.id}</p>
+                      <h3 className="font-semibold">{r.especie}</h3>
+                      <p className="text-sm text-gray-600">
+                        {r.predio} · {r.compromiso} · {r.eecc}
+                      </p>
+                    </div>
+                    <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">
+                      {r.estado}
+                    </span>
                   </div>
 
-                  <div style={styles.right}>
-                    {obtenerNumero(item, [
-                      "plantasReponer",
-                      "Plantas_Reponer",
-                      "PLANTAS_REPONER",
-                      "reponer",
-                      "total",
-                      "Total",
-                    ])}
+                  <div className="mt-3 h-2 rounded-full bg-gray-200">
+                    <div
+                      className="h-2 rounded-full bg-emerald-500"
+                      style={{ width: `${r.avance}%` }}
+                    />
                   </div>
-                </div>
+
+                  <div className="mt-2 flex justify-between text-xs text-gray-600">
+                    <span>Vivos: {r.vivos}</span>
+                    <span>Bajas: {r.muertos}</span>
+                    <span>Avance: {r.avance}%</span>
+                  </div>
+                </article>
               ))}
             </div>
           </div>
 
-          <div style={styles.section}>
-            <div style={styles.sectionHeader}>
-              <h2 style={styles.sectionTitle}>Predios críticos</h2>
-              <p style={styles.sectionSubtitle}>
-                Concentración territorial de la demanda.
-              </p>
+          <div className="rounded-3xl bg-[#102015] p-4 text-white shadow-sm">
+            <h2 className="mb-3 font-bold">Vista ejecutiva</h2>
+
+            <div className="space-y-3">
+              <Resumen label="Registros activos" value={filtrados.length} />
+              <Resumen label="Plantas vivas" value={totalVivos} />
+              <Resumen label="Bajas registradas" value={totalMuertos} />
+              <Resumen label="Avance promedio" value={`${avance}%`} />
             </div>
 
-            <div style={styles.table}>
-              <div style={styles.tableHead}>
-                <div>Predio</div>
-                <div style={styles.right}>Plantas</div>
-              </div>
-
-              {topPredios.map((item: any, index: number) => (
-                <div key={index} style={styles.tableRow}>
-                  <div>
-                    <strong>{item.nombre}</strong>
-                  </div>
-
-                  <div style={styles.right}>{item.reponer}</div>
-                </div>
-              ))}
+            <div className="mt-5 rounded-2xl bg-white/10 p-4">
+              <p className="text-sm text-emerald-100">Estado general</p>
+              <p className="mt-1 text-3xl font-bold">
+                {avance >= 75 ? 'Controlado' : avance >= 50 ? 'En seguimiento' : 'Crítico'}
+              </p>
+              <p className="mt-2 text-sm text-emerald-100">
+                Información consolidada por año, predio, compromiso y empresa ejecutora.
+              </p>
             </div>
           </div>
         </section>
@@ -211,225 +232,47 @@ export default async function Home() {
   );
 }
 
-const styles: any = {
-  main: {
-    minHeight: "100vh",
-    background: "#eef4ea",
-    padding: "32px",
-    fontFamily: "Arial, sans-serif",
-  },
+function Select({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  options: string[];
+  onChange: (v: string) => void;
+}) {
+  return (
+    <label className="rounded-2xl bg-white p-3 text-sm shadow-sm">
+      <span className="mb-1 block text-xs font-semibold text-gray-500">{label}</span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full bg-transparent font-semibold outline-none"
+      >
+        {options.map((o) => (
+          <option key={o}>{o}</option>
+        ))}
+      </select>
+    </label>
+  );
+}
 
-  panel: {
-    maxWidth: "1180px",
-    margin: "0 auto",
-    background: "#ffffff",
-    borderRadius: "24px",
-    padding: "30px",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.09)",
-  },
+function Kpi({ title, value }: { title: string; value: string | number }) {
+  return (
+    <div className="rounded-3xl bg-white p-4 shadow-sm">
+      <p className="text-xs font-semibold text-gray-500">{title}</p>
+      <p className="mt-1 text-2xl font-bold text-[#102015]">{value}</p>
+    </div>
+  );
+}
 
-  header: {
-    marginBottom: "26px",
-  },
-
-  label: {
-    margin: 0,
-    color: "#4f7f38",
-    fontWeight: 800,
-    fontSize: "13px",
-    letterSpacing: "0.8px",
-  },
-
-  title: {
-    margin: "10px 0",
-    fontSize: "38px",
-    color: "#1f2d1f",
-    lineHeight: 1.1,
-  },
-
-  subtitle: {
-    color: "#5f6f5c",
-    fontSize: "16px",
-  },
-
-  heroGrid: {
-  display: "grid",
-  gridTemplateColumns: "1.4fr 1fr",
-  gap: "18px",
-  marginBottom: "20px",
-},
-
-  hero: {
-    background: "linear-gradient(135deg, #2f5f2f, #6fa84f)",
-    borderRadius: "24px",
-    padding: "24px",
-    color: "#ffffff",
-    display: "flex",
-    gap: "24px",
-    alignItems: "center",
-    minHeight: "150px",
-  },
-
-  heroIcon: {
-    fontSize: "64px",
-  },
-
-  heroLabel: {
-    margin: 0,
-    fontSize: "17px",
-    opacity: 0.9,
-  },
-
-  heroValue: {
-    margin: "8px 0",
-    fontSize: "64px",
-    lineHeight: 1,
-  },
-
-  heroText: {
-    margin: 0,
-    fontSize: "15px",
-    opacity: 0.9,
-  },
-
-  sideBox: {
-    display: "grid",
-    gap: "14px",
-  },
-
-  sideItem: {
-    background: "#f9fbf7",
-    borderRadius: "18px",
-    padding: "20px",
-    boxShadow: "0 4px 14px rgba(0,0,0,0.05)",
-  },
-
-  sideLabel: {
-    margin: 0,
-    color: "#61705d",
-    fontSize: "14px",
-  },
-
-  sideValue: {
-    margin: "6px 0 0",
-    color: "#223322",
-    fontSize: "30px",
-    fontWeight: 800,
-  },
-
-  kpiRow: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit,minmax(210px,1fr))",
-    gap: "16px",
-    marginBottom: "24px",
-  },
-
-  kpiCard: {
-    background: "#f9fbf7",
-    borderRadius: "18px",
-    padding: "20px",
-    display: "flex",
-    gap: "14px",
-    alignItems: "center",
-    boxShadow: "0 4px 14px rgba(0,0,0,0.05)",
-  },
-
-  kpiIcon: {
-    fontSize: "30px",
-  },
-
-  kpiTitle: {
-    color: "#61705d",
-    fontSize: "14px",
-  },
-
-  kpiValue: {
-    marginTop: "5px",
-    fontSize: "28px",
-    fontWeight: 800,
-    color: "#223322",
-  },
-
-  twoColumns: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "22px",
-  },
-
-  section: {
-    background: "#f9fbf7",
-    borderRadius: "18px",
-    padding: "24px",
-  },
-
-  sectionHeader: {
-    marginBottom: "18px",
-  },
-
-  sectionTitle: {
-    margin: 0,
-    fontSize: "23px",
-    color: "#1f2d1f",
-  },
-
-  sectionSubtitle: {
-    margin: "6px 0 0",
-    color: "#5f6f5c",
-    fontSize: "14px",
-  },
-
-  table: {
-    width: "100%",
-  },
-
-  tableHead: {
-    display: "grid",
-    gridTemplateColumns: "1fr 120px",
-    padding: "12px 0",
-    borderBottom: "2px solid #dfe9d8",
-    fontWeight: 700,
-    color: "#4f7f38",
-    fontSize: "14px",
-  },
-
-  tableRow: {
-    display: "grid",
-    gridTemplateColumns: "1fr 120px",
-    padding: "14px 0",
-    borderBottom: "1px solid #e6eee2",
-    color: "#223322",
-    fontSize: "14px",
-  },
-
-  right: {
-  textAlign: "right",
-},
-
-headerTop: {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  gap: "20px",
-},
-
-brand: {
-  display: "flex",
-  alignItems: "center",
-  gap: "16px",
-},
-
-logo: {
-  height: "56px",
-  width: "56px",
-},
-
-censoButton: {
-  background: "#2f5f2f",
-  color: "#ffffff",
-  padding: "12px 18px",
-  borderRadius: "12px",
-  textDecoration: "none",
-  fontWeight: 700,
-  whiteSpace: "nowrap",
-},
-};
+function Resumen({ label, value }: { label: string; value: string | number }) {
+  return (
+    <div className="flex items-center justify-between rounded-2xl bg-white/10 px-4 py-3">
+      <span className="text-sm text-emerald-100">{label}</span>
+      <strong>{value}</strong>
+    </div>
+  );
+}
