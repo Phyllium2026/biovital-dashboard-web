@@ -46,15 +46,11 @@ export default async function Home() {
   const topEspecies = especies.slice(0, 6);
   const topPredios = predios.slice(0, 6);
 
-  const cards = [
-    ["🌱", "Plantas a Reponer", kpis.plantasReponer],
-    ["📊", "Prendimiento Promedio", `${kpis.prendimientoPromedio}%`],
-    ["📑", "Compromisos Ambientales", kpis.compromisos],
-    ["🤝", "EECC Participantes", kpis.eecc],
-    ["📋", "Registros Incorporados", kpis.registros],
-    ["🌳", "Predios Monitoreados", kpis.predios],
-    ["🪴", "Especies Monitoreadas", kpis.especies],
-    ["⚠️", "Registros a Revisión", kpis.registrosRevision],
+  const secundarios = [
+    ["📊", "Prendimiento", `${kpis.prendimientoPromedio}%`],
+    ["🌳", "Predios", kpis.predios],
+    ["🪴", "Especies", kpis.especies],
+    ["⚠️", "A revisión", kpis.registrosRevision],
   ];
 
   return (
@@ -64,22 +60,51 @@ export default async function Home() {
           <p style={styles.label}>BIOVITAL V1</p>
 
           <h1 style={styles.title}>
-            Dashboard de Replantes Ambientales
+            Centro de Control de Replantes Ambientales
           </h1>
 
           <p style={styles.subtitle}>
-            Información operacional para la toma de decisiones.
+            Información operacional para priorizar decisiones de replante.
           </p>
         </div>
 
-        <div style={styles.grid}>
-          {cards.map(([icon, title, value]) => (
-            <div key={title as string} style={styles.card}>
-              <div style={styles.icon}>{icon}</div>
+        <section style={styles.heroGrid}>
+          <div style={styles.hero}>
+            <div style={styles.heroIcon}>🌱</div>
+            <div>
+              <p style={styles.heroLabel}>Plantas a Reponer</p>
+              <h2 style={styles.heroValue}>{kpis.plantasReponer}</h2>
+              <p style={styles.heroText}>
+                Demanda total estimada según censos de sobrevivencia validados.
+              </p>
+            </div>
+          </div>
 
+          <div style={styles.sideBox}>
+            <div style={styles.sideItem}>
+              <p style={styles.sideLabel}>Compromisos Ambientales</p>
+              <p style={styles.sideValue}>{kpis.compromisos}</p>
+            </div>
+
+            <div style={styles.sideItem}>
+              <p style={styles.sideLabel}>EECC Participantes</p>
+              <p style={styles.sideValue}>{kpis.eecc}</p>
+            </div>
+
+            <div style={styles.sideItem}>
+              <p style={styles.sideLabel}>Registros Incorporados</p>
+              <p style={styles.sideValue}>{kpis.registros}</p>
+            </div>
+          </div>
+        </section>
+
+        <div style={styles.kpiRow}>
+          {secundarios.map(([icon, title, value]) => (
+            <div key={title as string} style={styles.kpiCard}>
+              <div style={styles.kpiIcon}>{icon}</div>
               <div>
-                <div style={styles.cardTitle}>{title}</div>
-                <div style={styles.cardValue}>{value}</div>
+                <div style={styles.kpiTitle}>{title}</div>
+                <div style={styles.kpiValue}>{value}</div>
               </div>
             </div>
           ))}
@@ -131,7 +156,7 @@ export default async function Home() {
 
           <div style={styles.section}>
             <div style={styles.sectionHeader}>
-              <h2 style={styles.sectionTitle}>Replantes por predio</h2>
+              <h2 style={styles.sectionTitle}>Predios críticos</h2>
               <p style={styles.sectionSubtitle}>
                 Concentración territorial de la demanda.
               </p>
@@ -163,7 +188,7 @@ export default async function Home() {
 const styles: any = {
   main: {
     minHeight: "100vh",
-    background: "#f4f7f2",
+    background: "#eef4ea",
     padding: "32px",
     fontFamily: "Arial, sans-serif",
   },
@@ -172,9 +197,9 @@ const styles: any = {
     maxWidth: "1180px",
     margin: "0 auto",
     background: "#ffffff",
-    borderRadius: "22px",
-    padding: "28px",
-    boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+    borderRadius: "24px",
+    padding: "30px",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.09)",
   },
 
   header: {
@@ -184,14 +209,16 @@ const styles: any = {
   label: {
     margin: 0,
     color: "#4f7f38",
-    fontWeight: 700,
+    fontWeight: 800,
     fontSize: "13px",
+    letterSpacing: "0.8px",
   },
 
   title: {
     margin: "10px 0",
-    fontSize: "36px",
+    fontSize: "38px",
     color: "#1f2d1f",
+    lineHeight: 1.1,
   },
 
   subtitle: {
@@ -199,34 +226,100 @@ const styles: any = {
     fontSize: "16px",
   },
 
-  grid: {
+  heroGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit,minmax(230px,1fr))",
-    gap: "18px",
+    gridTemplateColumns: "2fr 1fr",
+    gap: "22px",
+    marginBottom: "22px",
   },
 
-  card: {
-    background: "#f9fbf7",
-    borderRadius: "16px",
-    padding: "22px",
+  hero: {
+    background: "linear-gradient(135deg, #2f5f2f, #6fa84f)",
+    borderRadius: "24px",
+    padding: "34px",
+    color: "#ffffff",
     display: "flex",
-    gap: "16px",
+    gap: "24px",
     alignItems: "center",
-    boxShadow: "0 4px 14px rgba(0,0,0,0.06)",
+    minHeight: "210px",
   },
 
-  icon: {
-    fontSize: "32px",
+  heroIcon: {
+    fontSize: "64px",
   },
 
-  cardTitle: {
+  heroLabel: {
+    margin: 0,
+    fontSize: "17px",
+    opacity: 0.9,
+  },
+
+  heroValue: {
+    margin: "8px 0",
+    fontSize: "64px",
+    lineHeight: 1,
+  },
+
+  heroText: {
+    margin: 0,
+    fontSize: "15px",
+    opacity: 0.9,
+  },
+
+  sideBox: {
+    display: "grid",
+    gap: "14px",
+  },
+
+  sideItem: {
+    background: "#f9fbf7",
+    borderRadius: "18px",
+    padding: "20px",
+    boxShadow: "0 4px 14px rgba(0,0,0,0.05)",
+  },
+
+  sideLabel: {
+    margin: 0,
     color: "#61705d",
     fontSize: "14px",
   },
 
-  cardValue: {
-    marginTop: "6px",
+  sideValue: {
+    margin: "6px 0 0",
+    color: "#223322",
     fontSize: "30px",
+    fontWeight: 800,
+  },
+
+  kpiRow: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit,minmax(210px,1fr))",
+    gap: "16px",
+    marginBottom: "24px",
+  },
+
+  kpiCard: {
+    background: "#f9fbf7",
+    borderRadius: "18px",
+    padding: "20px",
+    display: "flex",
+    gap: "14px",
+    alignItems: "center",
+    boxShadow: "0 4px 14px rgba(0,0,0,0.05)",
+  },
+
+  kpiIcon: {
+    fontSize: "30px",
+  },
+
+  kpiTitle: {
+    color: "#61705d",
+    fontSize: "14px",
+  },
+
+  kpiValue: {
+    marginTop: "5px",
+    fontSize: "28px",
     fontWeight: 800,
     color: "#223322",
   },
@@ -235,7 +328,6 @@ const styles: any = {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gap: "22px",
-    marginTop: "26px",
   },
 
   section: {
