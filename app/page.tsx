@@ -1,7 +1,34 @@
-export default function Home() {
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbxlJ54EDwB8EeU9mQD06Iz_63jKP4DiST_xnj-U616eSLQb8TtwWUwPOBAyXEERFTlN/exec";
+
+async function getKpis() {
+  const response = await fetch(
+    `${API_URL}?view=kpis&anio=2026`,
+    {
+      cache: "no-store",
+    }
+  );
+
+  return response.json();
+}
+
+export default async function Home() {
+  const kpis = await getKpis();
+
+  const cards = [
+    ["🌱", "Plantas a Reponer", kpis.plantasReponer],
+    ["📊", "Prendimiento Promedio", `${kpis.prendimientoPromedio}%`],
+    ["📑", "Compromisos Ambientales", kpis.compromisos],
+    ["🤝", "EECC Participantes", kpis.eecc],
+    ["📋", "Registros Incorporados", kpis.registros],
+    ["🌳", "Predios Monitoreados", kpis.predios],
+    ["🪴", "Especies Monitoreadas", kpis.especies],
+    ["⚠️", "Registros a Revisión", kpis.registrosRevision],
+  ];
+
   return (
     <main style={styles.main}>
-      <section style={styles.card}>
+      <div style={styles.header}>
         <p style={styles.label}>BIOVITAL V1</p>
 
         <h1 style={styles.title}>
@@ -9,55 +36,90 @@ export default function Home() {
         </h1>
 
         <p style={styles.subtitle}>
-          Sistema operativo para apoyar la toma de decisiones sobre demanda de replantes ambientales.
+          Información operacional para la toma de decisiones.
         </p>
+      </div>
 
-        <div style={styles.status}>
-          ✅ Estructura base creada correctamente
-        </div>
-      </section>
+      <div style={styles.grid}>
+        {cards.map(([icon, title, value]) => (
+          <div key={title as string} style={styles.card}>
+            <div style={styles.icon}>{icon}</div>
+
+            <div>
+              <div style={styles.cardTitle}>
+                {title}
+              </div>
+
+              <div style={styles.cardValue}>
+                {value}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </main>
   );
 }
 
-const styles = {
+const styles: any = {
   main: {
     minHeight: "100vh",
     background: "#f4f7f2",
     padding: "32px",
     fontFamily: "Arial, sans-serif",
   },
-  card: {
-    background: "#ffffff",
-    borderRadius: "20px",
-    padding: "32px",
-    maxWidth: "900px",
-    margin: "0 auto",
-    boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+
+  header: {
+    marginBottom: "30px",
   },
+
   label: {
     margin: 0,
-    fontSize: "13px",
-    fontWeight: 700,
     color: "#4f7f38",
-    letterSpacing: "1px",
+    fontWeight: 700,
+    fontSize: "13px",
   },
+
   title: {
     margin: "10px 0",
     fontSize: "36px",
     color: "#1f2d1f",
   },
+
   subtitle: {
-    fontSize: "17px",
     color: "#5f6f5c",
-    lineHeight: 1.5,
+    fontSize: "16px",
   },
-  status: {
-    marginTop: "24px",
-    padding: "14px 16px",
-    borderRadius: "12px",
-    background: "#edf7e8",
-    color: "#2f6b22",
-    fontWeight: 700,
+
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))",
+    gap: "20px",
+  },
+
+  card: {
+    background: "#ffffff",
+    borderRadius: "18px",
+    padding: "24px",
+    display: "flex",
+    gap: "18px",
+    alignItems: "center",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
+  },
+
+  icon: {
+    fontSize: "34px",
+  },
+
+  cardTitle: {
+    color: "#61705d",
+    fontSize: "14px",
+  },
+
+  cardValue: {
+    marginTop: "6px",
+    fontSize: "30px",
+    fontWeight: 800,
+    color: "#223322",
   },
 };
