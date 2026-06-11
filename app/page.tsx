@@ -1,7 +1,6 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import Image from 'next/image';
 
 type Registro = {
   id: string;
@@ -59,15 +58,244 @@ const DATA: Registro[] = [
   },
 ];
 
-export default function Home() {
-  const [loading, setLoading] = useState(true);
+const styles: Record<string, React.CSSProperties> = {
+  main: {
+    minHeight: '100vh',
+    background: '#eef5ec',
+    color: '#102015',
+    fontFamily: 'Arial, Helvetica, sans-serif',
+    padding: 14,
+  },
+  shell: {
+    maxWidth: 1180,
+    margin: '0 auto',
+  },
+  header: {
+    background: '#082015',
+    color: 'white',
+    borderRadius: 22,
+    padding: '14px 16px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 12,
+    boxShadow: '0 8px 22px rgba(0,0,0,0.16)',
+    marginBottom: 12,
+  },
+  brand: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+  },
+  logoBox: {
+    width: 46,
+    height: 46,
+    borderRadius: 16,
+    background: 'rgba(255,255,255,0.12)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontWeight: 900,
+    fontSize: 18,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 900,
+    lineHeight: 1,
+    margin: 0,
+  },
+  subtitle: {
+    fontSize: 13,
+    color: '#c7f0d6',
+    marginTop: 5,
+  },
+  button: {
+    background: '#25b86a',
+    color: 'white',
+    border: 'none',
+    borderRadius: 16,
+    padding: '11px 15px',
+    fontWeight: 800,
+    fontSize: 14,
+    whiteSpace: 'nowrap',
+    cursor: 'pointer',
+  },
+  filters: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: 10,
+    marginBottom: 12,
+  },
+  filterCard: {
+    background: 'white',
+    borderRadius: 16,
+    padding: 10,
+    boxShadow: '0 2px 10px rgba(0,0,0,0.07)',
+  },
+  label: {
+    display: 'block',
+    fontSize: 11,
+    fontWeight: 800,
+    color: '#68766d',
+    marginBottom: 5,
+  },
+  select: {
+    width: '100%',
+    border: 'none',
+    outline: 'none',
+    background: 'transparent',
+    fontWeight: 800,
+    color: '#102015',
+  },
+  kpis: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: 10,
+    marginBottom: 12,
+  },
+  kpi: {
+    background: 'white',
+    borderRadius: 18,
+    padding: 14,
+    boxShadow: '0 2px 10px rgba(0,0,0,0.07)',
+  },
+  kpiTitle: {
+    fontSize: 12,
+    fontWeight: 800,
+    color: '#68766d',
+  },
+  kpiValue: {
+    fontSize: 28,
+    fontWeight: 900,
+    marginTop: 4,
+  },
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: '1.15fr 0.85fr',
+    gap: 12,
+  },
+  panel: {
+    background: 'white',
+    borderRadius: 22,
+    padding: 14,
+    boxShadow: '0 2px 10px rgba(0,0,0,0.07)',
+  },
+  executive: {
+    background: '#102015',
+    color: 'white',
+    borderRadius: 22,
+    padding: 14,
+    boxShadow: '0 2px 10px rgba(0,0,0,0.10)',
+  },
+  panelHead: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  panelTitle: {
+    fontSize: 18,
+    fontWeight: 900,
+    margin: 0,
+  },
+  muted: {
+    fontSize: 12,
+    color: '#68766d',
+  },
+  card: {
+    background: '#f7fbf5',
+    border: '1px solid #e4eee1',
+    borderRadius: 18,
+    padding: 12,
+    marginBottom: 9,
+  },
+  rowBetween: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: 10,
+    alignItems: 'flex-start',
+  },
+  id: {
+    fontSize: 11,
+    color: '#6f7c73',
+    fontWeight: 800,
+  },
+  species: {
+    fontSize: 16,
+    fontWeight: 900,
+    marginTop: 3,
+  },
+  detail: {
+    fontSize: 13,
+    color: '#506158',
+    marginTop: 3,
+  },
+  status: {
+    background: '#dff7e8',
+    color: '#126b3c',
+    borderRadius: 999,
+    padding: '6px 10px',
+    fontSize: 11,
+    fontWeight: 900,
+    whiteSpace: 'nowrap',
+  },
+  bar: {
+    height: 8,
+    background: '#dce7d9',
+    borderRadius: 999,
+    marginTop: 10,
+    overflow: 'hidden',
+  },
+  barFill: {
+    height: '100%',
+    background: '#25b86a',
+    borderRadius: 999,
+  },
+  miniStats: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: 8,
+    marginTop: 8,
+    fontSize: 12,
+    color: '#506158',
+    fontWeight: 700,
+  },
+  execRow: {
+    background: 'rgba(255,255,255,0.10)',
+    borderRadius: 16,
+    padding: '11px 12px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: 9,
+    fontSize: 14,
+  },
+  stateBox: {
+    background: 'rgba(255,255,255,0.10)',
+    borderRadius: 18,
+    padding: 14,
+    marginTop: 14,
+  },
+  stateSmall: {
+    fontSize: 13,
+    color: '#c7f0d6',
+  },
+  stateBig: {
+    fontSize: 30,
+    fontWeight: 900,
+    marginTop: 4,
+  },
+  stateText: {
+    fontSize: 13,
+    color: '#c7f0d6',
+    marginTop: 8,
+  },
+};
 
+export default function Home() {
   const [anio, setAnio] = useState('Todos');
   const [predio, setPredio] = useState('Todos');
   const [compromiso, setCompromiso] = useState('Todos');
   const [eecc, setEecc] = useState('Todos');
-
-  setTimeout(() => setLoading(false), 600);
 
   const filtrados = useMemo(() => {
     return DATA.filter((r) => {
@@ -88,62 +316,32 @@ export default function Home() {
       ? Math.round(filtrados.reduce((a, b) => a + b.avance, 0) / filtrados.length)
       : 0;
 
+  const estadoGeneral =
+    avance >= 75 ? 'Controlado' : avance >= 50 ? 'En seguimiento' : 'Crítico';
+
   const unique = (key: keyof Registro) => [
     'Todos',
     ...Array.from(new Set(DATA.map((r) => String(r[key])))),
   ];
 
-  if (loading) {
-    return (
-      <main className="min-h-screen flex items-center justify-center bg-[#071b12] text-white">
-        <div className="text-center">
-          <div className="mx-auto mb-5 h-20 w-20 rounded-3xl bg-white/10 flex items-center justify-center shadow-xl">
-            <Image
-              src="/biovital-logo.png"
-              alt="BIOVITAL"
-              width={54}
-              height={54}
-              priority
-            />
-          </div>
-          <h1 className="text-2xl font-bold tracking-wide">BIOVITAL</h1>
-          <p className="mt-2 text-sm text-emerald-100">Cargando sistema operacional...</p>
-        </div>
-      </main>
-    );
-  }
-
   return (
-    <main className="min-h-screen bg-[#f3f7f1] text-[#102015]">
-      <section className="mx-auto max-w-7xl px-4 py-4 md:py-6">
-        <header className="mb-4 flex items-center justify-between rounded-3xl bg-[#082015] px-4 py-3 text-white shadow-md">
-          <div className="flex items-center gap-3">
-            <div className="h-11 w-11 rounded-2xl bg-white/10 flex items-center justify-center">
-              <Image
-                src="/biovital-logo.png"
-                alt="BIOVITAL"
-                width={34}
-                height={34}
-                priority
-              />
-            </div>
+    <main style={styles.main}>
+      <div style={styles.shell}>
+        <header style={styles.header}>
+          <div style={styles.brand}>
+            <div style={styles.logoBox}>BV</div>
             <div>
-              <h1 className="text-lg md:text-2xl font-bold leading-none">BIOVITAL V2</h1>
-              <p className="text-xs md:text-sm text-emerald-100">
+              <h1 style={styles.title}>BIOVITAL V2</h1>
+              <div style={styles.subtitle}>
                 Monitoreo de biodiversidad y compromisos ambientales
-              </p>
+              </div>
             </div>
           </div>
 
-          <a
-            href="#"
-            className="rounded-2xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-emerald-600"
-          >
-            Registrar Censo
-          </a>
+          <button style={styles.button}>Registrar Censo</button>
         </header>
 
-        <section className="mb-4 grid grid-cols-2 gap-2 md:grid-cols-4">
+        <section style={styles.filters}>
           <Select label="Año" value={anio} options={unique('anio')} onChange={setAnio} />
           <Select label="Predio" value={predio} options={unique('predio')} onChange={setPredio} />
           <Select
@@ -155,78 +353,64 @@ export default function Home() {
           <Select label="EECC" value={eecc} options={unique('eecc')} onChange={setEecc} />
         </section>
 
-        <section className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+        <section style={styles.kpis}>
           <Kpi title="Censos" value={totalCensos} />
           <Kpi title="Vivos" value={totalVivos} />
           <Kpi title="Bajas" value={totalMuertos} />
           <Kpi title="Avance" value={`${avance}%`} />
         </section>
 
-        <section className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-3xl bg-white p-4 shadow-sm">
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="font-bold">Vista operacional</h2>
-              <span className="text-xs text-gray-500">{filtrados.length} registros</span>
+        <section style={styles.grid}>
+          <div style={styles.panel}>
+            <div style={styles.panelHead}>
+              <h2 style={styles.panelTitle}>Vista operacional</h2>
+              <span style={styles.muted}>{filtrados.length} registros</span>
             </div>
 
-            <div className="space-y-3">
-              {filtrados.map((r) => (
-                <article
-                  key={r.id}
-                  className="rounded-2xl border border-gray-100 bg-[#f8fbf6] p-3"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-xs text-gray-500">{r.id}</p>
-                      <h3 className="font-semibold">{r.especie}</h3>
-                      <p className="text-sm text-gray-600">
-                        {r.predio} · {r.compromiso} · {r.eecc}
-                      </p>
+            {filtrados.map((r) => (
+              <article key={r.id} style={styles.card}>
+                <div style={styles.rowBetween}>
+                  <div>
+                    <div style={styles.id}>{r.id}</div>
+                    <div style={styles.species}>{r.especie}</div>
+                    <div style={styles.detail}>
+                      {r.predio} · {r.compromiso} · {r.eecc}
                     </div>
-                    <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">
-                      {r.estado}
-                    </span>
                   </div>
+                  <span style={styles.status}>{r.estado}</span>
+                </div>
 
-                  <div className="mt-3 h-2 rounded-full bg-gray-200">
-                    <div
-                      className="h-2 rounded-full bg-emerald-500"
-                      style={{ width: `${r.avance}%` }}
-                    />
-                  </div>
+                <div style={styles.bar}>
+                  <div style={{ ...styles.barFill, width: `${r.avance}%` }} />
+                </div>
 
-                  <div className="mt-2 flex justify-between text-xs text-gray-600">
-                    <span>Vivos: {r.vivos}</span>
-                    <span>Bajas: {r.muertos}</span>
-                    <span>Avance: {r.avance}%</span>
-                  </div>
-                </article>
-              ))}
-            </div>
+                <div style={styles.miniStats}>
+                  <span>Vivos: {r.vivos}</span>
+                  <span>Bajas: {r.muertos}</span>
+                  <span>Avance: {r.avance}%</span>
+                </div>
+              </article>
+            ))}
           </div>
 
-          <div className="rounded-3xl bg-[#102015] p-4 text-white shadow-sm">
-            <h2 className="mb-3 font-bold">Vista ejecutiva</h2>
+          <aside style={styles.executive}>
+            <h2 style={styles.panelTitle}>Vista ejecutiva</h2>
 
-            <div className="space-y-3">
-              <Resumen label="Registros activos" value={filtrados.length} />
-              <Resumen label="Plantas vivas" value={totalVivos} />
-              <Resumen label="Bajas registradas" value={totalMuertos} />
-              <Resumen label="Avance promedio" value={`${avance}%`} />
-            </div>
+            <Resumen label="Registros activos" value={filtrados.length} />
+            <Resumen label="Plantas vivas" value={totalVivos} />
+            <Resumen label="Bajas registradas" value={totalMuertos} />
+            <Resumen label="Avance promedio" value={`${avance}%`} />
 
-            <div className="mt-5 rounded-2xl bg-white/10 p-4">
-              <p className="text-sm text-emerald-100">Estado general</p>
-              <p className="mt-1 text-3xl font-bold">
-                {avance >= 75 ? 'Controlado' : avance >= 50 ? 'En seguimiento' : 'Crítico'}
-              </p>
-              <p className="mt-2 text-sm text-emerald-100">
+            <div style={styles.stateBox}>
+              <div style={styles.stateSmall}>Estado general</div>
+              <div style={styles.stateBig}>{estadoGeneral}</div>
+              <div style={styles.stateText}>
                 Información consolidada por año, predio, compromiso y empresa ejecutora.
-              </p>
+              </div>
             </div>
-          </div>
+          </aside>
         </section>
-      </section>
+      </div>
     </main>
   );
 }
@@ -243,12 +427,12 @@ function Select({
   onChange: (v: string) => void;
 }) {
   return (
-    <label className="rounded-2xl bg-white p-3 text-sm shadow-sm">
-      <span className="mb-1 block text-xs font-semibold text-gray-500">{label}</span>
+    <label style={styles.filterCard}>
+      <span style={styles.label}>{label}</span>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full bg-transparent font-semibold outline-none"
+        style={styles.select}
       >
         {options.map((o) => (
           <option key={o}>{o}</option>
@@ -260,17 +444,17 @@ function Select({
 
 function Kpi({ title, value }: { title: string; value: string | number }) {
   return (
-    <div className="rounded-3xl bg-white p-4 shadow-sm">
-      <p className="text-xs font-semibold text-gray-500">{title}</p>
-      <p className="mt-1 text-2xl font-bold text-[#102015]">{value}</p>
+    <div style={styles.kpi}>
+      <div style={styles.kpiTitle}>{title}</div>
+      <div style={styles.kpiValue}>{value}</div>
     </div>
   );
 }
 
 function Resumen({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="flex items-center justify-between rounded-2xl bg-white/10 px-4 py-3">
-      <span className="text-sm text-emerald-100">{label}</span>
+    <div style={styles.execRow}>
+      <span>{label}</span>
       <strong>{value}</strong>
     </div>
   );
