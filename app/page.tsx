@@ -38,9 +38,13 @@ function obtenerNumero(item: any, campos: string[]) {
 export default async function Home() {
   const kpis = await getData("kpis");
   const especiesRaw = await getData("especies");
+  const prediosRaw = await getData("predios");
 
   const especies = normalizarLista(especiesRaw);
+  const predios = normalizarLista(prediosRaw);
+
   const topEspecies = especies.slice(0, 6);
+  const topPredios = predios.slice(0, 6);
 
   const cards = [
     ["🌱", "Plantas a Reponer", kpis.plantasReponer],
@@ -81,26 +85,22 @@ export default async function Home() {
           ))}
         </div>
 
-        <section style={styles.section}>
-          <div style={styles.sectionHeader}>
-            <h2 style={styles.sectionTitle}>Top especies a reponer</h2>
-            <p style={styles.sectionSubtitle}>
-              Ranking operativo según demanda estimada de replantes.
-            </p>
-          </div>
-
-          <div style={styles.table}>
-            <div style={styles.tableHead}>
-              <div>Especie</div>
-              <div style={styles.right}>Plantas a reponer</div>
+        <section style={styles.twoColumns}>
+          <div style={styles.section}>
+            <div style={styles.sectionHeader}>
+              <h2 style={styles.sectionTitle}>Top especies a reponer</h2>
+              <p style={styles.sectionSubtitle}>
+                Ranking operativo según demanda estimada.
+              </p>
             </div>
 
-            {topEspecies.length === 0 ? (
-              <div style={styles.empty}>
-                No hay datos disponibles para especies.
+            <div style={styles.table}>
+              <div style={styles.tableHead}>
+                <div>Especie</div>
+                <div style={styles.right}>Plantas</div>
               </div>
-            ) : (
-              topEspecies.map((item: any, index: number) => (
+
+              {topEspecies.map((item: any, index: number) => (
                 <div key={index} style={styles.tableRow}>
                   <div>
                     <strong>
@@ -125,8 +125,34 @@ export default async function Home() {
                     ])}
                   </div>
                 </div>
-              ))
-            )}
+              ))}
+            </div>
+          </div>
+
+          <div style={styles.section}>
+            <div style={styles.sectionHeader}>
+              <h2 style={styles.sectionTitle}>Replantes por predio</h2>
+              <p style={styles.sectionSubtitle}>
+                Concentración territorial de la demanda.
+              </p>
+            </div>
+
+            <div style={styles.table}>
+              <div style={styles.tableHead}>
+                <div>Predio</div>
+                <div style={styles.right}>Plantas</div>
+              </div>
+
+              {topPredios.map((item: any, index: number) => (
+                <div key={index} style={styles.tableRow}>
+                  <div>
+                    <strong>{item.nombre}</strong>
+                  </div>
+
+                  <div style={styles.right}>{item.reponer}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       </section>
@@ -205,8 +231,14 @@ const styles: any = {
     color: "#223322",
   },
 
-  section: {
+  twoColumns: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "22px",
     marginTop: "26px",
+  },
+
+  section: {
     background: "#f9fbf7",
     borderRadius: "18px",
     padding: "24px",
@@ -218,14 +250,14 @@ const styles: any = {
 
   sectionTitle: {
     margin: 0,
-    fontSize: "24px",
+    fontSize: "23px",
     color: "#1f2d1f",
   },
 
   sectionSubtitle: {
     margin: "6px 0 0",
     color: "#5f6f5c",
-    fontSize: "15px",
+    fontSize: "14px",
   },
 
   table: {
@@ -234,28 +266,24 @@ const styles: any = {
 
   tableHead: {
     display: "grid",
-    gridTemplateColumns: "1fr 180px",
+    gridTemplateColumns: "1fr 120px",
     padding: "12px 0",
     borderBottom: "2px solid #dfe9d8",
     fontWeight: 700,
     color: "#4f7f38",
+    fontSize: "14px",
   },
 
   tableRow: {
     display: "grid",
-    gridTemplateColumns: "1fr 180px",
+    gridTemplateColumns: "1fr 120px",
     padding: "14px 0",
     borderBottom: "1px solid #e6eee2",
     color: "#223322",
+    fontSize: "14px",
   },
 
   right: {
     textAlign: "right",
-  },
-
-  empty: {
-    padding: "18px 0",
-    color: "#7a8576",
-    fontStyle: "italic",
   },
 };
