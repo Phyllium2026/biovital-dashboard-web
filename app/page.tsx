@@ -212,7 +212,7 @@ export default function Home() {
           <div><IconChart /> Visual <span>Información clave</span></div>
           <div><IconShield /> Confiable <span>Datos trazables</span></div>
           <div><IconCloud /> Accesible <span>Web y móvil</span></div>
-          <strong><IconCheck /> Diseñado para decisiones rápidas y efectivas</strong>
+          <strong><IconCheck /> Diseñado para decisiones rápidas</strong>
         </footer>
 
         <nav className="bv-mobile-nav">
@@ -227,13 +227,7 @@ export default function Home() {
   );
 }
 
-function Select({
-  label,
-  value,
-  options,
-  onChange,
-  icon,
-}: {
+function Select({ label, value, options, onChange, icon }: {
   label: string;
   value: string;
   options: string[];
@@ -246,21 +240,14 @@ function Select({
       <div>
         <small>{label}</small>
         <select value={value} onChange={(e) => onChange(e.target.value)}>
-          {options.map((o) => (
-            <option key={o}>{o}</option>
-          ))}
+          {options.map((o) => <option key={o}>{o}</option>)}
         </select>
       </div>
     </label>
   );
 }
 
-function Kpi({
-  icon,
-  title,
-  value,
-  danger,
-}: {
+function Kpi({ icon, title, value, danger }: {
   icon: ReactNode;
   title: string;
   value: string | number;
@@ -277,12 +264,7 @@ function Kpi({
   );
 }
 
-function Resumen({
-  label,
-  value,
-  icon,
-  danger,
-}: {
+function Resumen({ label, value, icon, danger }: {
   label: string;
   value: string | number;
   icon: ReactNode;
@@ -343,15 +325,15 @@ const css = `
   background: linear-gradient(135deg, #f7faf6, #eef5ec);
   font-family: Inter, Arial, Helvetica, sans-serif;
   color: #102015;
-  padding: 6px;
+  padding: 7px;
 }
 
 .bv-shell {
   max-width: 1560px;
-  height: calc(100vh - 12px);
+  height: calc(100vh - 14px);
   margin: 0 auto;
   display: grid;
-  grid-template-rows: 58px 46px 50px 1fr 34px;
+  grid-template-rows: 72px 46px 50px 1fr 34px;
   gap: 5px;
 }
 
@@ -359,7 +341,7 @@ const css = `
   background: rgba(255,255,255,.97);
   border: 1px solid #e1eadf;
   border-radius: 15px;
-  padding: 6px 18px;
+  padding: 7px 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -369,12 +351,12 @@ const css = `
 .bv-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .bv-logo-box {
-  width: 64px;
-  height: 50px;
+  width: 82px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -382,33 +364,33 @@ const css = `
 }
 
 .bv-logo-img {
-  width: 76px;
-  height: 76px;
+  width: 92px;
+  height: 92px;
   object-fit: contain;
 }
 
 .bv-header h1 {
   margin: 0;
-  font-size: 25px;
+  font-size: 30px;
   letter-spacing: .15px;
   color: #0b3b28;
   line-height: .92;
 }
 
 .bv-header p {
-  margin: 3px 0 0;
-  font-size: 12px;
+  margin: 6px 0 0;
+  font-size: 13px;
   color: #53635a;
 }
 
 .bv-button {
-  height: 40px;
+  height: 44px;
   background: linear-gradient(135deg, #0f7a3c, #108e49);
   color: white;
   border-radius: 12px;
-  padding: 0 18px;
+  padding: 0 20px;
   font-weight: 900;
-  font-size: 13px;
+  font-size: 14px;
   box-shadow: 0 5px 14px rgba(15,122,60,.18);
   display: inline-flex;
   align-items: center;
@@ -516,7 +498,7 @@ const css = `
 .bv-content {
   min-height: 0;
   display: grid;
-  grid-template-columns: 1.52fr .88fr;
+  grid-template-columns: 1.45fr .9fr;
   gap: 8px;
 }
 
@@ -532,7 +514,8 @@ const css = `
 
 .bv-panel {
   display: grid;
-  grid-template-rows: 28px 1fr;
+  grid-template-rows: 28px auto;
+  align-content: start;
 }
 
 .bv-panel-head {
@@ -563,6 +546,7 @@ const css = `
 
 .bv-list {
   min-height: 0;
+  max-height: 100%;
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -580,16 +564,16 @@ const css = `
   background: #fbfefb;
   border: 1px solid #e1eadf;
   border-radius: 15px;
-  padding: 8px 10px;
+  padding: 7px 10px;
   display: grid;
-  grid-template-columns: 44px 1fr;
-  gap: 9px;
-  margin-bottom: 6px;
+  grid-template-columns: 42px 1fr;
+  gap: 8px;
+  margin-bottom: 5px;
 }
 
 .bv-card-icon {
-  width: 39px;
-  height: 39px;
+  width: 37px;
+  height: 37px;
   border-radius: 999px;
   background: #edf7ec;
   color: #0f7a3c;
@@ -599,8 +583,8 @@ const css = `
 }
 
 .bv-card-icon svg {
-  width: 25px;
-  height: 25px;
+  width: 23px;
+  height: 23px;
 }
 
 .bv-topline {
@@ -611,26 +595,26 @@ const css = `
 
 .bv-id {
   color: #0f7a3c;
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 900;
 }
 
 .bv-card h3 {
   margin: 1px 0 1px;
-  font-size: 16px;
+  font-size: 15.5px;
   line-height: 1.05;
 }
 
 .bv-card p {
   margin: 0;
   color: #53635a;
-  font-size: 11.5px;
+  font-size: 11px;
 }
 
 .bv-status {
   border-radius: 999px;
-  padding: 5px 9px;
-  font-size: 10px;
+  padding: 4px 8px;
+  font-size: 9.5px;
   font-weight: 900;
   background: #dff7e8;
   color: #08713a;
@@ -650,14 +634,14 @@ const css = `
 
 .bv-progress-row {
   display: grid;
-  grid-template-columns: 1fr 36px;
+  grid-template-columns: 1fr 34px;
   align-items: center;
-  gap: 8px;
-  margin-top: 6px;
+  gap: 7px;
+  margin-top: 5px;
 }
 
 .bv-progress {
-  height: 6px;
+  height: 5px;
   background: #dfe8dd;
   border-radius: 999px;
   overflow: hidden;
@@ -671,14 +655,14 @@ const css = `
 
 .bv-progress-row strong {
   color: #102015;
-  font-size: 12.5px;
+  font-size: 11.8px;
 }
 
 .bv-card-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  margin-top: 6px;
-  font-size: 11px;
+  margin-top: 5px;
+  font-size: 10.4px;
   color: #405247;
 }
 
@@ -688,85 +672,83 @@ const css = `
 
 .inline-icon {
   display: inline-block;
-  width: 12px;
-  height: 12px;
+  width: 11px;
+  height: 11px;
   vertical-align: -2px;
   margin-right: 3px;
 }
 
 .inline-icon svg {
-  width: 12px;
-  height: 12px;
+  width: 11px;
+  height: 11px;
 }
 
 .bv-exec {
   background: linear-gradient(145deg, #f8fff8, #edf7ed);
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 28px repeat(4, 42px) 72px 1fr;
+  gap: 5px;
 }
 
 .exec-head {
-  margin-bottom: 6px;
+  margin-bottom: 0;
 }
 
 .bv-summary {
-  height: 44px;
+  height: 42px;
   background: white;
   border: 1px solid #e1eadf;
   border-radius: 13px;
   display: grid;
-  grid-template-columns: 34px 1fr auto;
+  grid-template-columns: 32px 1fr auto;
   align-items: center;
   gap: 9px;
-  padding: 6px 10px;
-  margin-bottom: 6px;
+  padding: 5px 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,.035);
 }
 
 .bv-summary .bv-iconbox {
-  width: 30px;
-  height: 30px;
-  border-radius: 11px;
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
 }
 
 .bv-summary .bv-iconbox svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 
 .bv-summary p {
   margin: 0;
   font-weight: 800;
-  font-size: 12.4px;
+  font-size: 12px;
 }
 
 .bv-summary strong {
   color: #0f7a3c;
-  font-size: 18px;
+  font-size: 17px;
 }
 
 .bv-state {
   background: linear-gradient(135deg, #e1f2e4, #f8fff8);
   border-radius: 14px;
-  padding: 9px 11px;
-  height: 78px;
+  padding: 8px 11px;
   border: 1px solid #dceee2;
   display: grid;
-  grid-template-columns: 1fr 48px;
+  grid-template-columns: 1fr 42px;
   align-items: center;
   gap: 8px;
-  margin-bottom: 6px;
 }
 
 .bv-state small {
   color: #0f7a3c;
   font-weight: 900;
-  font-size: 10.5px;
+  font-size: 10px;
 }
 
 .bv-state h3 {
-  margin: 4px 0 3px;
-  font-size: 21px;
+  margin: 3px 0 2px;
+  font-size: 19px;
   color: #0f7a3c;
   line-height: 1;
 }
@@ -774,13 +756,13 @@ const css = `
 .bv-state p {
   margin: 0;
   color: #405247;
-  font-size: 10.8px;
-  line-height: 1.2;
+  font-size: 10px;
+  line-height: 1.15;
 }
 
 .bv-state-icon {
-  width: 46px;
-  height: 46px;
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
   background: rgba(255,255,255,.72);
   display: grid;
@@ -789,47 +771,48 @@ const css = `
 }
 
 .bv-state-icon svg {
-  width: 28px;
-  height: 28px;
+  width: 25px;
+  height: 25px;
 }
 
 .bv-distribution {
   background: white;
   border: 1px solid #e1eadf;
   border-radius: 14px;
-  padding: 9px 11px;
+  padding: 8px 11px;
   box-shadow: 0 4px 12px rgba(0,0,0,.03);
+  min-height: 0;
 }
 
 .bv-dist-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 7px;
+  margin-bottom: 6px;
 }
 
 .bv-dist-head strong {
-  font-size: 12.5px;
+  font-size: 12px;
   color: #102015;
 }
 
 .bv-dist-head span {
-  font-size: 10.5px;
+  font-size: 10px;
   color: #68766d;
 }
 
 .bv-dist-row {
   display: grid;
-  grid-template-columns: 80px 1fr 18px;
+  grid-template-columns: 76px 1fr 16px;
   align-items: center;
-  gap: 8px;
-  margin-top: 6px;
-  font-size: 11px;
+  gap: 7px;
+  margin-top: 5px;
+  font-size: 10.5px;
   color: #405247;
 }
 
 .bv-dist-row div {
-  height: 6px;
+  height: 5px;
   background: #dfe8dd;
   border-radius: 999px;
   overflow: hidden;
@@ -922,13 +905,13 @@ a {
   }
 
   .bv-logo-box {
-    width: 48px;
-    height: 42px;
+    width: 56px;
+    height: 48px;
   }
 
   .bv-logo-img {
-    width: 48px;
-    height: 48px;
+    width: 58px;
+    height: 58px;
   }
 
   .bv-header h1 {
@@ -1010,11 +993,6 @@ a {
     grid-template-columns: repeat(3, 1fr);
     gap: 4px;
     font-size: 10.8px;
-  }
-
-  .bv-state {
-    height: auto;
-    min-height: 90px;
   }
 
   .bv-state h3 {
