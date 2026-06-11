@@ -157,7 +157,7 @@ export default function Home() {
                     <div className="bv-card-stats">
                       <span><IconLeafSmall /> Vivos: <b>{r.vivos}</b></span>
                       <span className="danger"><IconDownSmall /> Bajas: <b>{r.muertos}</b></span>
-                      <span><IconClock /> Censos: <b>{r.censos}</b></span>
+                      <span><IconClockSmall /> Censos: <b>{r.censos}</b></span>
                     </div>
                   </div>
                 </article>
@@ -180,8 +180,8 @@ export default function Home() {
               <div>
                 <small>Estado general</small>
                 <h3>{estadoGeneral}</h3>
-                <p>Avance promedio <b>{avance}%</b></p>
-                <p>Información consolidada por año, predio, compromiso y empresa ejecutora.</p>
+                <p><b>{avance}%</b> de avance promedio consolidado.</p>
+                <p>Información por año, predio, compromiso y empresa ejecutora.</p>
               </div>
               <div className="bv-state-mark">
                 <IconLeaf />
@@ -273,7 +273,7 @@ function Resumen({
 }
 
 function Svg({ children }: { children: React.ReactNode }) {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round">{children}</svg>;
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round">{children}</svg>;
 }
 
 function IconPlus() { return <Svg><path d="M12 5v14M5 12h14" /></Svg>; }
@@ -295,6 +295,7 @@ function IconHome() { return <Svg><path d="M3 11l9-8 9 8" /><path d="M5 10v11h14
 function IconMore() { return <Svg><path d="M5 12h.01M12 12h.01M19 12h.01" /></Svg>; }
 function IconLeafSmall() { return <span className="inline-icon"><IconLeaf /></span>; }
 function IconDownSmall() { return <span className="inline-icon"><IconDown /></span>; }
+function IconClockSmall() { return <span className="inline-icon"><IconClock /></span>; }
 
 const css = `
 .bv-main {
@@ -303,65 +304,64 @@ const css = `
   background: linear-gradient(135deg, #f7faf6, #eef5ec);
   font-family: Inter, Arial, Helvetica, sans-serif;
   color: #102015;
-  padding: 10px;
+  padding: 8px;
 }
 
 .bv-shell {
-  max-width: 1500px;
-  height: calc(100vh - 20px);
+  max-width: 1540px;
+  height: calc(100vh - 16px);
   margin: 0 auto;
   display: grid;
-  grid-template-rows: 82px 62px 72px 1fr;
-  gap: 10px;
+  grid-template-rows: 76px 56px 64px 1fr;
+  gap: 8px;
 }
 
 .bv-header {
-  background: rgba(255,255,255,.96);
+  background: rgba(255,255,255,.97);
   border: 1px solid #e1eadf;
-  border-radius: 20px;
-  padding: 12px 22px;
+  border-radius: 18px;
+  padding: 9px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 10px 28px rgba(0,0,0,.07);
+  box-shadow: 0 8px 24px rgba(0,0,0,.065);
 }
 
 .bv-brand {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 }
 
 .bv-logo-img {
-  width: 58px;
-  height: 58px;
+  width: 68px;
+  height: 68px;
   object-fit: contain;
-  border-radius: 14px;
 }
 
 .bv-header h1 {
   margin: 0;
-  font-size: 31px;
-  letter-spacing: .3px;
+  font-size: 29px;
+  letter-spacing: .2px;
   color: #0b3b28;
-  line-height: 1;
+  line-height: .95;
 }
 
 .bv-header p {
-  margin: 5px 0 0;
-  font-size: 14px;
+  margin: 4px 0 0;
+  font-size: 13px;
   color: #53635a;
 }
 
 .bv-button {
-  height: 50px;
+  height: 46px;
   background: linear-gradient(135deg, #0f7a3c, #108e49);
   color: white;
-  border-radius: 15px;
-  padding: 0 24px;
+  border-radius: 14px;
+  padding: 0 22px;
   font-weight: 900;
-  font-size: 15px;
-  box-shadow: 0 10px 22px rgba(15,122,60,.25);
+  font-size: 14px;
+  box-shadow: 0 8px 18px rgba(15,122,60,.22);
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -375,18 +375,18 @@ const css = `
 .bv-filters {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  gap: 8px;
 }
 
 .bv-filter {
   background: white;
   border: 1px solid #e1eadf;
-  border-radius: 17px;
-  padding: 10px 14px;
+  border-radius: 15px;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
   gap: 11px;
-  box-shadow: 0 6px 18px rgba(0,0,0,.045);
+  box-shadow: 0 5px 14px rgba(0,0,0,.04);
 }
 
 .bv-filter-icon,
@@ -403,23 +403,23 @@ const css = `
 
 .bv-filter-icon svg,
 .bv-iconbox svg {
-  width: 20px;
-  height: 20px;
+  width: 23px;
+  height: 23px;
 }
 
 .bv-filter small {
   display: block;
   color: #68766d;
   font-weight: 800;
-  font-size: 11px;
-  margin-bottom: 2px;
+  font-size: 10.5px;
+  margin-bottom: 1px;
 }
 
 .bv-filter select {
   border: 0;
   outline: 0;
   background: transparent;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 900;
   color: #102015;
   width: 100%;
@@ -428,31 +428,31 @@ const css = `
 .bv-kpis {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 10px;
+  gap: 8px;
 }
 
 .bv-kpi {
   background: white;
   border: 1px solid #e1eadf;
-  border-radius: 17px;
-  padding: 12px;
+  border-radius: 15px;
+  padding: 9px 12px;
   display: flex;
   align-items: center;
   gap: 12px;
-  box-shadow: 0 6px 18px rgba(0,0,0,.045);
+  box-shadow: 0 5px 14px rgba(0,0,0,.04);
 }
 
 .bv-kpi small {
   display: block;
-  font-size: 12px;
+  font-size: 11.5px;
   color: #53635a;
   font-weight: 800;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .bv-kpi strong {
   display: block;
-  font-size: 25px;
+  font-size: 23px;
   color: #0f7a3c;
   line-height: 1;
 }
@@ -464,43 +464,43 @@ const css = `
 .bv-content {
   min-height: 0;
   display: grid;
-  grid-template-columns: 1.48fr .9fr;
-  gap: 12px;
+  grid-template-columns: 1.5fr .9fr;
+  gap: 10px;
 }
 
 .bv-panel,
 .bv-exec {
   min-height: 0;
-  background: rgba(255,255,255,.96);
+  background: rgba(255,255,255,.97);
   border: 1px solid #e1eadf;
-  border-radius: 20px;
-  padding: 14px;
-  box-shadow: 0 10px 26px rgba(0,0,0,.06);
+  border-radius: 18px;
+  padding: 12px;
+  box-shadow: 0 8px 22px rgba(0,0,0,.055);
 }
 
 .bv-panel {
   display: grid;
-  grid-template-rows: 34px 1fr;
+  grid-template-rows: 31px 1fr;
 }
 
 .bv-panel-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .bv-panel-head h2 {
   margin: 0;
-  font-size: 21px;
+  font-size: 19px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
 
 .bv-panel-head h2 svg {
-  width: 20px;
-  height: 20px;
+  width: 21px;
+  height: 21px;
   color: #0f7a3c;
 }
 
@@ -527,28 +527,28 @@ const css = `
 .bv-card {
   background: #fbfefb;
   border: 1px solid #e1eadf;
-  border-radius: 18px;
-  padding: 12px;
+  border-radius: 16px;
+  padding: 10px 12px;
   display: grid;
-  grid-template-columns: 54px 1fr;
-  gap: 12px;
-  margin-bottom: 9px;
+  grid-template-columns: 50px 1fr;
+  gap: 11px;
+  margin-bottom: 8px;
 }
 
 .bv-card-icon {
-  width: 48px;
-  height: 48px;
+  width: 45px;
+  height: 45px;
   border-radius: 999px;
   background: #edf7ec;
   color: #0f7a3c;
   display: grid;
   place-items: center;
-  box-shadow: 0 7px 16px rgba(0,0,0,.055);
+  box-shadow: 0 6px 14px rgba(0,0,0,.05);
 }
 
 .bv-card-icon svg {
-  width: 25px;
-  height: 25px;
+  width: 27px;
+  height: 27px;
 }
 
 .bv-topline {
@@ -559,26 +559,26 @@ const css = `
 
 .bv-id {
   color: #0f7a3c;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 900;
 }
 
 .bv-card h3 {
-  margin: 2px 0 2px;
-  font-size: 20px;
+  margin: 1px 0 2px;
+  font-size: 18px;
   line-height: 1.05;
 }
 
 .bv-card p {
   margin: 0;
   color: #53635a;
-  font-size: 13px;
+  font-size: 12.5px;
 }
 
 .bv-status {
   border-radius: 999px;
-  padding: 6px 11px;
-  font-size: 11px;
+  padding: 5px 10px;
+  font-size: 10.5px;
   font-weight: 900;
   background: #dff7e8;
   color: #08713a;
@@ -598,14 +598,14 @@ const css = `
 
 .bv-progress-row {
   display: grid;
-  grid-template-columns: 1fr 42px;
+  grid-template-columns: 1fr 39px;
   align-items: center;
-  gap: 10px;
-  margin-top: 9px;
+  gap: 9px;
+  margin-top: 7px;
 }
 
 .bv-progress {
-  height: 7px;
+  height: 6px;
   background: #dfe8dd;
   border-radius: 999px;
   overflow: hidden;
@@ -619,14 +619,14 @@ const css = `
 
 .bv-progress-row strong {
   color: #102015;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .bv-card-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  margin-top: 9px;
-  font-size: 12.5px;
+  margin-top: 7px;
+  font-size: 11.8px;
   color: #405247;
 }
 
@@ -654,21 +654,21 @@ const css = `
 }
 
 .exec-head {
-  margin-bottom: 9px;
+  margin-bottom: 7px;
 }
 
 .bv-summary {
-  height: 55px;
+  height: 50px;
   background: white;
   border: 1px solid #e1eadf;
-  border-radius: 15px;
+  border-radius: 14px;
   display: grid;
-  grid-template-columns: 40px 1fr auto;
+  grid-template-columns: 38px 1fr auto;
   align-items: center;
   gap: 10px;
-  padding: 8px 12px;
-  margin-bottom: 8px;
-  box-shadow: 0 6px 16px rgba(0,0,0,.045);
+  padding: 7px 11px;
+  margin-bottom: 7px;
+  box-shadow: 0 5px 14px rgba(0,0,0,.04);
 }
 
 .bv-summary .bv-iconbox {
@@ -678,67 +678,67 @@ const css = `
 }
 
 .bv-summary .bv-iconbox svg {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
 }
 
 .bv-summary p {
   margin: 0;
   font-weight: 800;
-  font-size: 13.5px;
+  font-size: 13px;
 }
 
 .bv-summary strong {
   color: #0f7a3c;
-  font-size: 20px;
+  font-size: 19px;
 }
 
 .bv-state {
   margin-top: auto;
   background: linear-gradient(135deg, #e1f2e4, #f8fff8);
-  border-radius: 18px;
-  padding: 15px;
-  min-height: 130px;
+  border-radius: 16px;
+  padding: 12px 14px;
+  height: 126px;
   border: 1px solid #dceee2;
   display: grid;
-  grid-template-columns: 1fr 82px;
-  gap: 10px;
+  grid-template-columns: 1fr 74px;
+  gap: 8px;
   align-items: center;
 }
 
 .bv-state small {
   color: #0f7a3c;
   font-weight: 900;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .bv-state h3 {
-  margin: 9px 0 7px;
-  font-size: 29px;
+  margin: 6px 0 5px;
+  font-size: 26px;
   color: #0f7a3c;
   line-height: 1;
 }
 
 .bv-state p {
-  margin: 4px 0 0;
+  margin: 2px 0 0;
   color: #405247;
-  font-size: 12.5px;
-  line-height: 1.35;
+  font-size: 11.5px;
+  line-height: 1.25;
 }
 
 .bv-state-mark {
-  width: 78px;
-  height: 78px;
+  width: 68px;
+  height: 68px;
   border-radius: 999px;
-  background: rgba(255,255,255,.7);
+  background: rgba(255,255,255,.78);
   color: #0f7a3c;
   display: grid;
   place-items: center;
 }
 
 .bv-state-mark svg {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
 }
 
 .bv-mobile-nav {
@@ -768,76 +768,66 @@ a {
   }
 
   .bv-header {
-    min-height: 70px;
-    padding: 10px 12px;
-    border-radius: 17px;
-    margin-bottom: 9px;
+    min-height: 68px;
+    padding: 9px 11px;
+    border-radius: 16px;
+    margin-bottom: 8px;
   }
 
   .bv-logo-img {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
   }
 
   .bv-header h1 {
-    font-size: 22px;
+    font-size: 21px;
   }
 
   .bv-header p {
-    font-size: 11.5px;
+    font-size: 11px;
   }
 
   .bv-button {
-    height: 40px;
-    padding: 0 12px;
+    height: 39px;
+    padding: 0 11px;
     font-size: 12px;
   }
 
   .bv-filters {
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    margin-bottom: 8px;
+    gap: 7px;
+    margin-bottom: 7px;
   }
 
   .bv-filter {
-    height: 56px;
-    padding: 8px 10px;
-  }
-
-  .bv-filter-icon,
-  .bv-iconbox {
-    width: 34px;
-    height: 34px;
-  }
-
-  .bv-filter select {
-    font-size: 14px;
+    height: 54px;
+    padding: 7px 9px;
   }
 
   .bv-kpis {
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    margin-bottom: 9px;
+    gap: 7px;
+    margin-bottom: 8px;
   }
 
   .bv-kpi {
-    min-height: 64px;
-    padding: 10px;
+    min-height: 60px;
+    padding: 9px;
   }
 
   .bv-kpi strong {
-    font-size: 23px;
+    font-size: 22px;
   }
 
   .bv-content {
     grid-template-columns: 1fr;
-    gap: 9px;
+    gap: 8px;
   }
 
   .bv-panel,
   .bv-exec {
-    padding: 12px;
-    border-radius: 18px;
+    padding: 11px;
+    border-radius: 17px;
   }
 
   .bv-list {
@@ -846,36 +836,38 @@ a {
   }
 
   .bv-card {
-    grid-template-columns: 46px 1fr;
-    gap: 10px;
-    padding: 11px;
+    grid-template-columns: 44px 1fr;
+    gap: 9px;
+    padding: 10px;
   }
 
   .bv-card-icon {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
   }
 
   .bv-card h3 {
-    font-size: 17px;
+    font-size: 16px;
   }
 
   .bv-card p {
-    font-size: 12px;
+    font-size: 11.5px;
   }
 
   .bv-card-stats {
     grid-template-columns: repeat(3, 1fr);
     gap: 4px;
-    font-size: 11.5px;
+    font-size: 11px;
   }
 
   .bv-state {
-    grid-template-columns: 1fr 72px;
+    height: auto;
+    min-height: 118px;
+    grid-template-columns: 1fr 66px;
   }
 
   .bv-state h3 {
-    font-size: 25px;
+    font-size: 23px;
   }
 
   .bv-mobile-nav {
