@@ -58,254 +58,25 @@ const DATA: Registro[] = [
   },
 ];
 
-const styles: Record<string, React.CSSProperties> = {
-  main: {
-    minHeight: '100vh',
-    background: '#eef5ec',
-    color: '#102015',
-    fontFamily: 'Arial, Helvetica, sans-serif',
-    padding: 14,
-  },
-  shell: {
-    maxWidth: 1180,
-    margin: '0 auto',
-  },
-  header: {
-    background: '#082015',
-    color: 'white',
-    borderRadius: 22,
-    padding: '14px 16px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: 12,
-    boxShadow: '0 8px 22px rgba(0,0,0,0.16)',
-    marginBottom: 12,
-  },
-  brand: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 12,
-  },
-  logoBox: {
-    width: 46,
-    height: 46,
-    borderRadius: 16,
-    background: 'rgba(255,255,255,0.12)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontWeight: 900,
-    fontSize: 18,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 900,
-    lineHeight: 1,
-    margin: 0,
-  },
-  subtitle: {
-    fontSize: 13,
-    color: '#c7f0d6',
-    marginTop: 5,
-  },
-  button: {
-    background: '#25b86a',
-    color: 'white',
-    border: 'none',
-    borderRadius: 16,
-    padding: '11px 15px',
-    fontWeight: 800,
-    fontSize: 14,
-    whiteSpace: 'nowrap',
-    cursor: 'pointer',
-  },
-  filters: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: 10,
-    marginBottom: 12,
-  },
-  filterCard: {
-    background: 'white',
-    borderRadius: 16,
-    padding: 10,
-    boxShadow: '0 2px 10px rgba(0,0,0,0.07)',
-  },
-  label: {
-    display: 'block',
-    fontSize: 11,
-    fontWeight: 800,
-    color: '#68766d',
-    marginBottom: 5,
-  },
-  select: {
-    width: '100%',
-    border: 'none',
-    outline: 'none',
-    background: 'transparent',
-    fontWeight: 800,
-    color: '#102015',
-  },
-  kpis: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: 10,
-    marginBottom: 12,
-  },
-  kpi: {
-    background: 'white',
-    borderRadius: 18,
-    padding: 14,
-    boxShadow: '0 2px 10px rgba(0,0,0,0.07)',
-  },
-  kpiTitle: {
-    fontSize: 12,
-    fontWeight: 800,
-    color: '#68766d',
-  },
-  kpiValue: {
-    fontSize: 28,
-    fontWeight: 900,
-    marginTop: 4,
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: '1.15fr 0.85fr',
-    gap: 12,
-  },
-  panel: {
-    background: 'white',
-    borderRadius: 22,
-    padding: 14,
-    boxShadow: '0 2px 10px rgba(0,0,0,0.07)',
-  },
-  executive: {
-    background: '#102015',
-    color: 'white',
-    borderRadius: 22,
-    padding: 14,
-    boxShadow: '0 2px 10px rgba(0,0,0,0.10)',
-  },
-  panelHead: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  panelTitle: {
-    fontSize: 18,
-    fontWeight: 900,
-    margin: 0,
-  },
-  muted: {
-    fontSize: 12,
-    color: '#68766d',
-  },
-  card: {
-    background: '#f7fbf5',
-    border: '1px solid #e4eee1',
-    borderRadius: 18,
-    padding: 12,
-    marginBottom: 9,
-  },
-  rowBetween: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    gap: 10,
-    alignItems: 'flex-start',
-  },
-  id: {
-    fontSize: 11,
-    color: '#6f7c73',
-    fontWeight: 800,
-  },
-  species: {
-    fontSize: 16,
-    fontWeight: 900,
-    marginTop: 3,
-  },
-  detail: {
-    fontSize: 13,
-    color: '#506158',
-    marginTop: 3,
-  },
-  status: {
-    background: '#dff7e8',
-    color: '#126b3c',
-    borderRadius: 999,
-    padding: '6px 10px',
-    fontSize: 11,
-    fontWeight: 900,
-    whiteSpace: 'nowrap',
-  },
-  bar: {
-    height: 8,
-    background: '#dce7d9',
-    borderRadius: 999,
-    marginTop: 10,
-    overflow: 'hidden',
-  },
-  barFill: {
-    height: '100%',
-    background: '#25b86a',
-    borderRadius: 999,
-  },
-  miniStats: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    gap: 8,
-    marginTop: 8,
-    fontSize: 12,
-    color: '#506158',
-    fontWeight: 700,
-  },
-  execRow: {
-    background: 'rgba(255,255,255,0.10)',
-    borderRadius: 16,
-    padding: '11px 12px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: 9,
-    fontSize: 14,
-  },
-  stateBox: {
-    background: 'rgba(255,255,255,0.10)',
-    borderRadius: 18,
-    padding: 14,
-    marginTop: 14,
-  },
-  stateSmall: {
-    fontSize: 13,
-    color: '#c7f0d6',
-  },
-  stateBig: {
-    fontSize: 30,
-    fontWeight: 900,
-    marginTop: 4,
-  },
-  stateText: {
-    fontSize: 13,
-    color: '#c7f0d6',
-    marginTop: 8,
-  },
-};
-
 export default function Home() {
   const [anio, setAnio] = useState('Todos');
   const [predio, setPredio] = useState('Todos');
   const [compromiso, setCompromiso] = useState('Todos');
   const [eecc, setEecc] = useState('Todos');
 
+  const unique = (key: keyof Registro) => [
+    'Todos',
+    ...Array.from(new Set(DATA.map((r) => String(r[key])))),
+  ];
+
   const filtrados = useMemo(() => {
-    return DATA.filter((r) => {
-      return (
+    return DATA.filter(
+      (r) =>
         (anio === 'Todos' || r.anio === anio) &&
         (predio === 'Todos' || r.predio === predio) &&
         (compromiso === 'Todos' || r.compromiso === compromiso) &&
         (eecc === 'Todos' || r.eecc === eecc)
-      );
-    });
+    );
   }, [anio, predio, compromiso, eecc]);
 
   const totalCensos = filtrados.reduce((a, b) => a + b.censos, 0);
@@ -317,100 +88,106 @@ export default function Home() {
       : 0;
 
   const estadoGeneral =
-    avance >= 75 ? 'Controlado' : avance >= 50 ? 'En seguimiento' : 'Crítico';
-
-  const unique = (key: keyof Registro) => [
-    'Todos',
-    ...Array.from(new Set(DATA.map((r) => String(r[key])))),
-  ];
+    avance >= 75 ? 'CONTROLADO' : avance >= 50 ? 'EN SEGUIMIENTO' : 'CRÍTICO';
 
   return (
-    <main style={styles.main}>
-      <div style={styles.shell}>
-        <header style={styles.header}>
-          <div style={styles.brand}>
-            <div style={styles.logoBox}>BV</div>
+    <main className="bv-main">
+      <style>{css}</style>
+
+      <section className="bv-shell">
+        <header className="bv-header">
+          <div className="bv-brand">
+            <div className="bv-logo">BV</div>
             <div>
-              <h1 style={styles.title}>BIOVITAL V2</h1>
-              <div style={styles.subtitle}>
-                Monitoreo de biodiversidad y compromisos ambientales
-              </div>
+              <h1>BIOVITAL</h1>
+              <p>Monitoreo de biodiversidad y compromisos ambientales</p>
             </div>
           </div>
 
-          <button style={styles.button}>Registrar Censo</button>
+          <a className="bv-button" href="#">
+            + Registrar Censo
+          </a>
         </header>
 
-        <section style={styles.filters}>
-          <Select label="Año" value={anio} options={unique('anio')} onChange={setAnio} />
-          <Select label="Predio" value={predio} options={unique('predio')} onChange={setPredio} />
-          <Select
-            label="Compromiso"
-            value={compromiso}
-            options={unique('compromiso')}
-            onChange={setCompromiso}
-          />
-          <Select label="EECC" value={eecc} options={unique('eecc')} onChange={setEecc} />
+        <section className="bv-filters">
+          <Select label="Año" value={anio} options={unique('anio')} onChange={setAnio} icon="📅" />
+          <Select label="Predio" value={predio} options={unique('predio')} onChange={setPredio} icon="📍" />
+          <Select label="Compromiso" value={compromiso} options={unique('compromiso')} onChange={setCompromiso} icon="📋" />
+          <Select label="EECC" value={eecc} options={unique('eecc')} onChange={setEecc} icon="🏢" />
         </section>
 
-        <section style={styles.kpis}>
-          <Kpi title="Censos" value={totalCensos} />
-          <Kpi title="Vivos" value={totalVivos} />
-          <Kpi title="Bajas" value={totalMuertos} />
-          <Kpi title="Avance" value={`${avance}%`} />
+        <section className="bv-kpis">
+          <Kpi icon="🧾" title="Censos" value={totalCensos} />
+          <Kpi icon="🌿" title="Vivos" value={totalVivos} />
+          <Kpi icon="↘" title="Bajas" value={totalMuertos} danger />
+          <Kpi icon="◔" title="Avance" value={`${avance}%`} />
+          <Kpi icon="⛰" title="Predios" value="1" />
+          <Kpi icon="🤝" title="Compromisos" value="2" />
         </section>
 
-        <section style={styles.grid}>
-          <div style={styles.panel}>
-            <div style={styles.panelHead}>
-              <h2 style={styles.panelTitle}>Vista operacional</h2>
-              <span style={styles.muted}>{filtrados.length} registros</span>
+        <section className="bv-content">
+          <div className="bv-panel">
+            <div className="bv-panel-head">
+              <h2>☷ Vista operacional</h2>
+              <span>{filtrados.length} registros</span>
             </div>
 
-            {filtrados.map((r) => (
-              <article key={r.id} style={styles.card}>
-                <div style={styles.rowBetween}>
-                  <div>
-                    <div style={styles.id}>{r.id}</div>
-                    <div style={styles.species}>{r.especie}</div>
-                    <div style={styles.detail}>
-                      {r.predio} · {r.compromiso} · {r.eecc}
+            <div className="bv-list">
+              {filtrados.map((r) => (
+                <article className="bv-card" key={r.id}>
+                  <div className="bv-card-icon">🌿</div>
+
+                  <div className="bv-card-body">
+                    <div className="bv-id">{r.id}</div>
+                    <div className="bv-row">
+                      <h3>{r.especie}</h3>
+                      <span className={`bv-status ${r.estado.toLowerCase()}`}>{r.estado}</span>
+                    </div>
+                    <p>{r.predio} · {r.compromiso} · {r.eecc}</p>
+
+                    <div className="bv-progress">
+                      <div style={{ width: `${r.avance}%` }} />
+                    </div>
+
+                    <div className="bv-card-stats">
+                      <span>🌿 Vivos: <b>{r.vivos}</b></span>
+                      <span className="danger">↘ Bajas: <b>{r.muertos}</b></span>
+                      <span>◔ Censos: <b>{r.censos}</b></span>
+                      <strong>{r.avance}%</strong>
                     </div>
                   </div>
-                  <span style={styles.status}>{r.estado}</span>
-                </div>
-
-                <div style={styles.bar}>
-                  <div style={{ ...styles.barFill, width: `${r.avance}%` }} />
-                </div>
-
-                <div style={styles.miniStats}>
-                  <span>Vivos: {r.vivos}</span>
-                  <span>Bajas: {r.muertos}</span>
-                  <span>Avance: {r.avance}%</span>
-                </div>
-              </article>
-            ))}
+                </article>
+              ))}
+            </div>
           </div>
 
-          <aside style={styles.executive}>
-            <h2 style={styles.panelTitle}>Vista ejecutiva</h2>
+          <aside className="bv-exec">
+            <div className="bv-panel-head">
+              <h2>📈 Vista ejecutiva</h2>
+              <span>Resumen consolidado</span>
+            </div>
 
-            <Resumen label="Registros activos" value={filtrados.length} />
-            <Resumen label="Plantas vivas" value={totalVivos} />
-            <Resumen label="Bajas registradas" value={totalMuertos} />
-            <Resumen label="Avance promedio" value={`${avance}%`} />
+            <Resumen label="Registros activos" value={filtrados.length} icon="👥" />
+            <Resumen label="Plantas vivas" value={totalVivos} icon="🌿" />
+            <Resumen label="Bajas registradas" value={totalMuertos} icon="↘" danger />
+            <Resumen label="Avance promedio" value={`${avance}%`} icon="◔" />
 
-            <div style={styles.stateBox}>
-              <div style={styles.stateSmall}>Estado general</div>
-              <div style={styles.stateBig}>{estadoGeneral}</div>
-              <div style={styles.stateText}>
-                Información consolidada por año, predio, compromiso y empresa ejecutora.
-              </div>
+            <div className="bv-state">
+              <small>Estado general</small>
+              <h3>{estadoGeneral}</h3>
+              <p>Información consolidada por año, predio, compromiso y empresa ejecutora.</p>
             </div>
           </aside>
         </section>
-      </div>
+
+        <nav className="bv-mobile-nav">
+          <span>🏠<small>Inicio</small></span>
+          <span>📋<small>Registros</small></span>
+          <span className="active">＋</span>
+          <span>📊<small>Reportes</small></span>
+          <span>⋯<small>Más</small></span>
+        </nav>
+      </section>
     </main>
   );
 }
@@ -420,42 +197,565 @@ function Select({
   value,
   options,
   onChange,
+  icon,
 }: {
   label: string;
   value: string;
   options: string[];
   onChange: (v: string) => void;
+  icon: string;
 }) {
   return (
-    <label style={styles.filterCard}>
-      <span style={styles.label}>{label}</span>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        style={styles.select}
-      >
-        {options.map((o) => (
-          <option key={o}>{o}</option>
-        ))}
-      </select>
+    <label className="bv-filter">
+      <span>{icon}</span>
+      <div>
+        <small>{label}</small>
+        <select value={value} onChange={(e) => onChange(e.target.value)}>
+          {options.map((o) => (
+            <option key={o}>{o}</option>
+          ))}
+        </select>
+      </div>
     </label>
   );
 }
 
-function Kpi({ title, value }: { title: string; value: string | number }) {
+function Kpi({
+  icon,
+  title,
+  value,
+  danger,
+}: {
+  icon: string;
+  title: string;
+  value: string | number;
+  danger?: boolean;
+}) {
   return (
-    <div style={styles.kpi}>
-      <div style={styles.kpiTitle}>{title}</div>
-      <div style={styles.kpiValue}>{value}</div>
+    <div className="bv-kpi">
+      <span>{icon}</span>
+      <div>
+        <small>{title}</small>
+        <strong className={danger ? 'danger' : ''}>{value}</strong>
+      </div>
     </div>
   );
 }
 
-function Resumen({ label, value }: { label: string; value: string | number }) {
+function Resumen({
+  label,
+  value,
+  icon,
+  danger,
+}: {
+  label: string;
+  value: string | number;
+  icon: string;
+  danger?: boolean;
+}) {
   return (
-    <div style={styles.execRow}>
-      <span>{label}</span>
-      <strong>{value}</strong>
+    <div className="bv-summary">
+      <span>{icon}</span>
+      <p>{label}</p>
+      <strong className={danger ? 'danger' : ''}>{value}</strong>
     </div>
   );
 }
+
+const css = `
+.bv-main {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f7faf6, #edf5ec);
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  color: #102015;
+  padding: 14px;
+}
+
+.bv-shell {
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.bv-header {
+  height: 104px;
+  background: rgba(255,255,255,.94);
+  border: 1px solid #e2ebe0;
+  border-radius: 22px;
+  padding: 18px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 14px 36px rgba(0,0,0,.08);
+  margin-bottom: 10px;
+}
+
+.bv-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.bv-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #dceee2, #f8fff9);
+  color: #136b3d;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 23px;
+  border: 1px solid #d6eadc;
+}
+
+.bv-header h1 {
+  margin: 0;
+  font-size: 36px;
+  letter-spacing: .5px;
+  color: #0b3b28;
+  line-height: 1;
+}
+
+.bv-header p {
+  margin: 6px 0 0;
+  font-size: 15px;
+  color: #53635a;
+}
+
+.bv-button {
+  background: linear-gradient(135deg, #0f7a3c, #108e49);
+  color: white;
+  border-radius: 16px;
+  padding: 16px 28px;
+  font-weight: 900;
+  font-size: 16px;
+  box-shadow: 0 10px 22px rgba(15,122,60,.28);
+}
+
+.bv-filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.bv-filter {
+  height: 72px;
+  background: white;
+  border: 1px solid #e2ebe0;
+  border-radius: 18px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 8px 22px rgba(0,0,0,.055);
+}
+
+.bv-filter span {
+  font-size: 23px;
+}
+
+.bv-filter small {
+  display: block;
+  color: #68766d;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.bv-filter select {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 18px;
+  font-weight: 900;
+  color: #102015;
+  width: 100%;
+}
+
+.bv-kpis {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.bv-kpi {
+  background: white;
+  border: 1px solid #e2ebe0;
+  border-radius: 18px;
+  min-height: 86px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 8px 22px rgba(0,0,0,.055);
+}
+
+.bv-kpi span {
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  background: #e8f5eb;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+}
+
+.bv-kpi small {
+  display: block;
+  font-size: 13px;
+  color: #53635a;
+  font-weight: 800;
+}
+
+.bv-kpi strong {
+  display: block;
+  font-size: 30px;
+  color: #0f7a3c;
+  line-height: 1.05;
+}
+
+.danger {
+  color: #c84a12 !important;
+}
+
+.bv-content {
+  display: grid;
+  grid-template-columns: 1.45fr .9fr;
+  gap: 18px;
+}
+
+.bv-panel,
+.bv-exec {
+  background: rgba(255,255,255,.96);
+  border: 1px solid #e2ebe0;
+  border-radius: 22px;
+  padding: 20px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.07);
+}
+
+.bv-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.bv-panel-head h2 {
+  margin: 0;
+  font-size: 23px;
+}
+
+.bv-panel-head span {
+  color: #53635a;
+  font-size: 13px;
+}
+
+.bv-list {
+  max-height: 430px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.bv-card {
+  background: #fbfefb;
+  border: 1px solid #e2ebe0;
+  border-radius: 20px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.bv-card-icon {
+  width: 62px;
+  height: 62px;
+  border-radius: 999px;
+  background: #eef7ec;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.08);
+}
+
+.bv-id {
+  color: #0f7a3c;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.bv-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.bv-row h3 {
+  margin: 4px 0;
+  font-size: 23px;
+  line-height: 1;
+}
+
+.bv-card p {
+  margin: 0 0 12px;
+  color: #53635a;
+  font-size: 15px;
+}
+
+.bv-status {
+  border-radius: 999px;
+  padding: 7px 13px;
+  font-size: 12px;
+  font-weight: 900;
+  background: #dff7e8;
+  color: #08713a;
+  height: fit-content;
+}
+
+.bv-status.seguimiento {
+  background: #e5f0ff;
+  color: #125ea8;
+}
+
+.bv-status.planificado {
+  background: #eee4ff;
+  color: #6333a5;
+}
+
+.bv-progress {
+  height: 8px;
+  background: #dfe8dd;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bv-progress div {
+  height: 100%;
+  background: linear-gradient(90deg, #0f7a3c, #2dbb6a);
+  border-radius: 999px;
+}
+
+.bv-card-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 12px;
+  font-size: 14px;
+  color: #405247;
+}
+
+.bv-card-stats b {
+  color: #0f7a3c;
+}
+
+.bv-exec {
+  background: linear-gradient(145deg, #f8fff8, #edf7ed);
+}
+
+.bv-summary {
+  height: 64px;
+  background: white;
+  border: 1px solid #e2ebe0;
+  border-radius: 16px;
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  margin-bottom: 10px;
+  box-shadow: 0 7px 18px rgba(0,0,0,.055);
+}
+
+.bv-summary span {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  background: #e8f5eb;
+  display: grid;
+  place-items: center;
+}
+
+.bv-summary p {
+  margin: 0;
+  font-weight: 700;
+}
+
+.bv-summary strong {
+  color: #0f7a3c;
+  font-size: 22px;
+}
+
+.bv-state {
+  margin-top: 18px;
+  background: linear-gradient(135deg, #e1f2e4, #f8fff8);
+  border-radius: 20px;
+  padding: 22px;
+  min-height: 160px;
+  border: 1px solid #dceee2;
+}
+
+.bv-state small {
+  color: #0f7a3c;
+  font-weight: 900;
+}
+
+.bv-state h3 {
+  margin: 18px 0 12px;
+  font-size: 34px;
+  color: #0f7a3c;
+  line-height: 1;
+}
+
+.bv-state p {
+  margin: 0;
+  color: #405247;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.bv-mobile-nav {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .bv-main {
+    padding: 10px 10px 76px;
+  }
+
+  .bv-header {
+    height: auto;
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .bv-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 15px;
+    font-size: 17px;
+  }
+
+  .bv-header h1 {
+    font-size: 22px;
+  }
+
+  .bv-header p {
+    font-size: 12px;
+  }
+
+  .bv-button {
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+
+  .bv-filters {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .bv-filter {
+    height: 60px;
+    padding: 10px;
+  }
+
+  .bv-filter select {
+    font-size: 15px;
+  }
+
+  .bv-kpis {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .bv-kpi {
+    min-height: 72px;
+    padding: 12px;
+  }
+
+  .bv-kpi strong {
+    font-size: 25px;
+  }
+
+  .bv-content {
+    grid-template-columns: 1fr;
+  }
+
+  .bv-panel,
+  .bv-exec {
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .bv-list {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .bv-card {
+    grid-template-columns: 52px 1fr;
+    gap: 12px;
+    padding: 13px;
+  }
+
+  .bv-card-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+  }
+
+  .bv-row h3 {
+    font-size: 18px;
+  }
+
+  .bv-card p {
+    font-size: 13px;
+  }
+
+  .bv-card-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    font-size: 13px;
+  }
+
+  .bv-state h3 {
+    font-size: 27px;
+  }
+
+  .bv-mobile-nav {
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    height: 58px;
+    background: white;
+    border: 1px solid #dfe8dd;
+    border-radius: 20px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,.15);
+    z-index: 50;
+  }
+
+  .bv-mobile-nav span {
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    color: #53635a;
+  }
+
+  .bv-mobile-nav small {
+    font-size: 10px;
+  }
+
+  .bv-mobile-nav .active {
+    width: 46px;
+    height: 46px;
+    background: #0f7a3c;
+    color: white;
+    border-radius: 999px;
+    margin: 0 auto;
+    font-size: 26px;
+  }
+}
+`;
