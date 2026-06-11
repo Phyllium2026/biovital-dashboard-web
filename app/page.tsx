@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import type { ReactNode } from 'react';
 
 type Registro = {
   id: string;
@@ -97,7 +98,9 @@ export default function Home() {
       <section className="bv-shell">
         <header className="bv-header">
           <div className="bv-brand">
-            <img src="/logo-biovital.png" alt="BIOVITAL" className="bv-logo-img" />
+            <div className="bv-logo-box">
+              <img src="/logo-biovital.png" alt="BIOVITAL" className="bv-logo-img" />
+            </div>
             <div>
               <h1>BIOVITAL</h1>
               <p>Monitoreo de biodiversidad y compromisos ambientales</p>
@@ -177,15 +180,9 @@ export default function Home() {
             <Resumen label="Avance promedio" value={`${avance}%`} icon={<IconProgress />} />
 
             <div className="bv-state">
-              <div>
-                <small>Estado general</small>
-                <h3>{estadoGeneral}</h3>
-                <p><b>{avance}%</b> de avance promedio consolidado.</p>
-                <p>Información por año, predio, compromiso y empresa ejecutora.</p>
-              </div>
-              <div className="bv-state-mark">
-                <IconLeaf />
-              </div>
+              <small>Estado general</small>
+              <h3>{estadoGeneral}</h3>
+              <p><b>{avance}%</b> de avance promedio consolidado por año, predio, compromiso y empresa ejecutora.</p>
             </div>
           </aside>
         </section>
@@ -213,7 +210,7 @@ function Select({
   value: string;
   options: string[];
   onChange: (v: string) => void;
-  icon: React.ReactNode;
+  icon: ReactNode;
 }) {
   return (
     <label className="bv-filter">
@@ -236,7 +233,7 @@ function Kpi({
   value,
   danger,
 }: {
-  icon: React.ReactNode;
+  icon: ReactNode;
   title: string;
   value: string | number;
   danger?: boolean;
@@ -260,7 +257,7 @@ function Resumen({
 }: {
   label: string;
   value: string | number;
-  icon: React.ReactNode;
+  icon: ReactNode;
   danger?: boolean;
 }) {
   return (
@@ -272,8 +269,8 @@ function Resumen({
   );
 }
 
-function Svg({ children }: { children: React.ReactNode }) {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round">{children}</svg>;
+function Svg({ children }: { children: ReactNode }) {
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">{children}</svg>;
 }
 
 function IconPlus() { return <Svg><path d="M12 5v14M5 12h14" /></Svg>; }
@@ -304,96 +301,106 @@ const css = `
   background: linear-gradient(135deg, #f7faf6, #eef5ec);
   font-family: Inter, Arial, Helvetica, sans-serif;
   color: #102015;
-  padding: 8px;
+  padding: 6px;
 }
 
 .bv-shell {
-  max-width: 1540px;
-  height: calc(100vh - 16px);
+  max-width: 1560px;
+  height: calc(100vh - 12px);
   margin: 0 auto;
   display: grid;
-  grid-template-rows: 76px 56px 64px 1fr;
-  gap: 8px;
+  grid-template-rows: 64px 48px 54px 1fr;
+  gap: 6px;
 }
 
 .bv-header {
   background: rgba(255,255,255,.97);
   border: 1px solid #e1eadf;
-  border-radius: 18px;
-  padding: 9px 20px;
+  border-radius: 16px;
+  padding: 7px 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 8px 24px rgba(0,0,0,.065);
+  box-shadow: 0 6px 20px rgba(0,0,0,.055);
 }
 
 .bv-brand {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
+}
+
+.bv-logo-box {
+  width: 78px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
 }
 
 .bv-logo-img {
-  width: 68px;
-  height: 68px;
+  width: 92px;
+  height: 92px;
   object-fit: contain;
+  transform: scale(1.35);
 }
 
 .bv-header h1 {
   margin: 0;
-  font-size: 29px;
+  font-size: 27px;
   letter-spacing: .2px;
   color: #0b3b28;
-  line-height: .95;
+  line-height: .92;
 }
 
 .bv-header p {
-  margin: 4px 0 0;
-  font-size: 13px;
+  margin: 3px 0 0;
+  font-size: 12.5px;
   color: #53635a;
 }
 
 .bv-button {
-  height: 46px;
+  height: 42px;
   background: linear-gradient(135deg, #0f7a3c, #108e49);
   color: white;
-  border-radius: 14px;
-  padding: 0 22px;
+  border-radius: 13px;
+  padding: 0 20px;
   font-weight: 900;
-  font-size: 14px;
-  box-shadow: 0 8px 18px rgba(15,122,60,.22);
+  font-size: 13.5px;
+  box-shadow: 0 6px 16px rgba(15,122,60,.2);
   display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 
 .bv-button svg {
-  width: 17px;
-  height: 17px;
+  width: 16px;
+  height: 16px;
 }
 
 .bv-filters {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  gap: 6px;
 }
 
 .bv-filter {
   background: white;
   border: 1px solid #e1eadf;
-  border-radius: 15px;
-  padding: 8px 12px;
+  border-radius: 14px;
+  padding: 6px 11px;
   display: flex;
   align-items: center;
-  gap: 11px;
-  box-shadow: 0 5px 14px rgba(0,0,0,.04);
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.035);
 }
 
 .bv-filter-icon,
 .bv-iconbox {
-  width: 38px;
-  height: 38px;
-  border-radius: 13px;
+  width: 35px;
+  height: 35px;
+  border-radius: 12px;
   background: #e9f6ed;
   color: #0f7a3c;
   display: grid;
@@ -403,23 +410,23 @@ const css = `
 
 .bv-filter-icon svg,
 .bv-iconbox svg {
-  width: 23px;
-  height: 23px;
+  width: 22px;
+  height: 22px;
 }
 
 .bv-filter small {
   display: block;
   color: #68766d;
   font-weight: 800;
-  font-size: 10.5px;
-  margin-bottom: 1px;
+  font-size: 10px;
+  margin-bottom: 0;
 }
 
 .bv-filter select {
   border: 0;
   outline: 0;
   background: transparent;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 900;
   color: #102015;
   width: 100%;
@@ -428,31 +435,31 @@ const css = `
 .bv-kpis {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 8px;
+  gap: 6px;
 }
 
 .bv-kpi {
   background: white;
   border: 1px solid #e1eadf;
-  border-radius: 15px;
-  padding: 9px 12px;
+  border-radius: 14px;
+  padding: 7px 11px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  box-shadow: 0 5px 14px rgba(0,0,0,.04);
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.035);
 }
 
 .bv-kpi small {
   display: block;
-  font-size: 11.5px;
+  font-size: 10.8px;
   color: #53635a;
   font-weight: 800;
-  margin-bottom: 1px;
+  margin-bottom: 0;
 }
 
 .bv-kpi strong {
   display: block;
-  font-size: 23px;
+  font-size: 21px;
   color: #0f7a3c;
   line-height: 1;
 }
@@ -464,8 +471,8 @@ const css = `
 .bv-content {
   min-height: 0;
   display: grid;
-  grid-template-columns: 1.5fr .9fr;
-  gap: 10px;
+  grid-template-columns: 1.52fr .88fr;
+  gap: 8px;
 }
 
 .bv-panel,
@@ -473,50 +480,50 @@ const css = `
   min-height: 0;
   background: rgba(255,255,255,.97);
   border: 1px solid #e1eadf;
-  border-radius: 18px;
-  padding: 12px;
-  box-shadow: 0 8px 22px rgba(0,0,0,.055);
+  border-radius: 16px;
+  padding: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.045);
 }
 
 .bv-panel {
   display: grid;
-  grid-template-rows: 31px 1fr;
+  grid-template-rows: 28px 1fr;
 }
 
 .bv-panel-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .bv-panel-head h2 {
   margin: 0;
-  font-size: 19px;
+  font-size: 18px;
   display: flex;
   align-items: center;
   gap: 7px;
 }
 
 .bv-panel-head h2 svg {
-  width: 21px;
-  height: 21px;
+  width: 20px;
+  height: 20px;
   color: #0f7a3c;
 }
 
 .bv-panel-head span {
   color: #53635a;
-  font-size: 12px;
+  font-size: 11.5px;
 }
 
 .bv-list {
   min-height: 0;
   overflow-y: auto;
-  padding-right: 5px;
+  padding-right: 4px;
 }
 
 .bv-list::-webkit-scrollbar {
-  width: 7px;
+  width: 6px;
 }
 
 .bv-list::-webkit-scrollbar-thumb {
@@ -527,58 +534,58 @@ const css = `
 .bv-card {
   background: #fbfefb;
   border: 1px solid #e1eadf;
-  border-radius: 16px;
-  padding: 10px 12px;
+  border-radius: 15px;
+  padding: 9px 11px;
   display: grid;
-  grid-template-columns: 50px 1fr;
-  gap: 11px;
-  margin-bottom: 8px;
+  grid-template-columns: 46px 1fr;
+  gap: 10px;
+  margin-bottom: 7px;
 }
 
 .bv-card-icon {
-  width: 45px;
-  height: 45px;
+  width: 41px;
+  height: 41px;
   border-radius: 999px;
   background: #edf7ec;
   color: #0f7a3c;
   display: grid;
   place-items: center;
-  box-shadow: 0 6px 14px rgba(0,0,0,.05);
+  box-shadow: 0 5px 12px rgba(0,0,0,.045);
 }
 
 .bv-card-icon svg {
-  width: 27px;
-  height: 27px;
+  width: 26px;
+  height: 26px;
 }
 
 .bv-topline {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
+  gap: 9px;
 }
 
 .bv-id {
   color: #0f7a3c;
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 900;
 }
 
 .bv-card h3 {
-  margin: 1px 0 2px;
-  font-size: 18px;
+  margin: 1px 0 1px;
+  font-size: 17px;
   line-height: 1.05;
 }
 
 .bv-card p {
   margin: 0;
   color: #53635a;
-  font-size: 12.5px;
+  font-size: 12px;
 }
 
 .bv-status {
   border-radius: 999px;
-  padding: 5px 10px;
-  font-size: 10.5px;
+  padding: 5px 9px;
+  font-size: 10px;
   font-weight: 900;
   background: #dff7e8;
   color: #08713a;
@@ -598,10 +605,10 @@ const css = `
 
 .bv-progress-row {
   display: grid;
-  grid-template-columns: 1fr 39px;
+  grid-template-columns: 1fr 36px;
   align-items: center;
-  gap: 9px;
-  margin-top: 7px;
+  gap: 8px;
+  margin-top: 6px;
 }
 
 .bv-progress {
@@ -619,14 +626,14 @@ const css = `
 
 .bv-progress-row strong {
   color: #102015;
-  font-size: 13px;
+  font-size: 12.5px;
 }
 
 .bv-card-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  margin-top: 7px;
-  font-size: 11.8px;
+  margin-top: 6px;
+  font-size: 11.2px;
   color: #405247;
 }
 
@@ -636,15 +643,15 @@ const css = `
 
 .inline-icon {
   display: inline-block;
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
   vertical-align: -2px;
   margin-right: 3px;
 }
 
 .inline-icon svg {
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
 }
 
 .bv-exec {
@@ -654,91 +661,73 @@ const css = `
 }
 
 .exec-head {
-  margin-bottom: 7px;
+  margin-bottom: 6px;
 }
 
 .bv-summary {
-  height: 50px;
+  height: 44px;
   background: white;
   border: 1px solid #e1eadf;
-  border-radius: 14px;
+  border-radius: 13px;
   display: grid;
-  grid-template-columns: 38px 1fr auto;
+  grid-template-columns: 34px 1fr auto;
   align-items: center;
-  gap: 10px;
-  padding: 7px 11px;
-  margin-bottom: 7px;
-  box-shadow: 0 5px 14px rgba(0,0,0,.04);
+  gap: 9px;
+  padding: 6px 10px;
+  margin-bottom: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.035);
 }
 
 .bv-summary .bv-iconbox {
-  width: 34px;
-  height: 34px;
-  border-radius: 12px;
+  width: 30px;
+  height: 30px;
+  border-radius: 11px;
 }
 
 .bv-summary .bv-iconbox svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
 }
 
 .bv-summary p {
   margin: 0;
   font-weight: 800;
-  font-size: 13px;
+  font-size: 12.4px;
 }
 
 .bv-summary strong {
   color: #0f7a3c;
-  font-size: 19px;
+  font-size: 18px;
 }
 
 .bv-state {
-  margin-top: auto;
+  margin-top: 5px;
   background: linear-gradient(135deg, #e1f2e4, #f8fff8);
-  border-radius: 16px;
-  padding: 12px 14px;
-  height: 126px;
+  border-radius: 14px;
+  padding: 10px 12px;
+  height: 94px;
   border: 1px solid #dceee2;
-  display: grid;
-  grid-template-columns: 1fr 74px;
-  gap: 8px;
-  align-items: center;
+  overflow: hidden;
 }
 
 .bv-state small {
   color: #0f7a3c;
   font-weight: 900;
-  font-size: 11px;
+  font-size: 10.5px;
 }
 
 .bv-state h3 {
-  margin: 6px 0 5px;
-  font-size: 26px;
+  margin: 5px 0 4px;
+  font-size: 24px;
   color: #0f7a3c;
   line-height: 1;
 }
 
 .bv-state p {
-  margin: 2px 0 0;
+  margin: 0;
   color: #405247;
-  font-size: 11.5px;
+  font-size: 11.2px;
   line-height: 1.25;
-}
-
-.bv-state-mark {
-  width: 68px;
-  height: 68px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.78);
-  color: #0f7a3c;
-  display: grid;
-  place-items: center;
-}
-
-.bv-state-mark svg {
-  width: 40px;
-  height: 40px;
 }
 
 .bv-mobile-nav {
@@ -768,15 +757,21 @@ a {
   }
 
   .bv-header {
-    min-height: 68px;
-    padding: 9px 11px;
+    min-height: 64px;
+    padding: 8px 10px;
     border-radius: 16px;
     margin-bottom: 8px;
   }
 
+  .bv-logo-box {
+    width: 54px;
+    height: 46px;
+  }
+
   .bv-logo-img {
-    width: 48px;
-    height: 48px;
+    width: 70px;
+    height: 70px;
+    transform: scale(1.25);
   }
 
   .bv-header h1 {
@@ -788,8 +783,8 @@ a {
   }
 
   .bv-button {
-    height: 39px;
-    padding: 0 11px;
+    height: 38px;
+    padding: 0 10px;
     font-size: 12px;
   }
 
@@ -800,7 +795,7 @@ a {
   }
 
   .bv-filter {
-    height: 54px;
+    height: 52px;
     padding: 7px 9px;
   }
 
@@ -811,12 +806,12 @@ a {
   }
 
   .bv-kpi {
-    min-height: 60px;
-    padding: 9px;
+    min-height: 58px;
+    padding: 8px 9px;
   }
 
   .bv-kpi strong {
-    font-size: 22px;
+    font-size: 21px;
   }
 
   .bv-content {
@@ -826,8 +821,8 @@ a {
 
   .bv-panel,
   .bv-exec {
-    padding: 11px;
-    border-radius: 17px;
+    padding: 10px;
+    border-radius: 16px;
   }
 
   .bv-list {
@@ -836,14 +831,14 @@ a {
   }
 
   .bv-card {
-    grid-template-columns: 44px 1fr;
-    gap: 9px;
-    padding: 10px;
+    grid-template-columns: 42px 1fr;
+    gap: 8px;
+    padding: 9px;
   }
 
   .bv-card-icon {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
   }
 
   .bv-card h3 {
@@ -857,17 +852,16 @@ a {
   .bv-card-stats {
     grid-template-columns: repeat(3, 1fr);
     gap: 4px;
-    font-size: 11px;
+    font-size: 10.8px;
   }
 
   .bv-state {
     height: auto;
-    min-height: 118px;
-    grid-template-columns: 1fr 66px;
+    min-height: 96px;
   }
 
   .bv-state h3 {
-    font-size: 23px;
+    font-size: 22px;
   }
 
   .bv-mobile-nav {
