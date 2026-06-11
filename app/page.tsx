@@ -59,6 +59,8 @@ const DATA: Registro[] = [
   },
 ];
 
+const formato = (n: number) => new Intl.NumberFormat('es-CL').format(n);
+
 export default function Home() {
   const [anio, setAnio] = useState('Todos');
   const [predio, setPredio] = useState('Todos');
@@ -124,12 +126,12 @@ export default function Home() {
         </section>
 
         <section className="bv-kpis">
-          <Kpi icon={<IconFile />} title="Censos" value={totalCensos} />
-          <Kpi icon={<IconLeaf />} title="Vivos" value={totalVivos} />
-          <Kpi icon={<IconDown />} title="Bajas" value={totalMuertos} danger />
+          <Kpi icon={<IconFile />} title="Censos" value={formato(totalCensos)} />
+          <Kpi icon={<IconLeaf />} title="Vivos" value={formato(totalVivos)} />
+          <Kpi icon={<IconDown />} title="Bajas" value={formato(totalMuertos)} danger />
           <Kpi icon={<IconProgress />} title="Avance" value={`${avance}%`} />
           <Kpi icon={<IconMountain />} title="Predios" value="1" />
-          <Kpi icon={<IconCommit />} title="Compromisos" value="2" />
+          <Kpi icon={<IconShield />} title="Compromisos" value="2" />
         </section>
 
         <section className="bv-content">
@@ -162,9 +164,9 @@ export default function Home() {
                     </div>
 
                     <div className="bv-card-stats">
-                      <span><IconLeafSmall /> Vivos: <b>{r.vivos}</b></span>
-                      <span className="danger"><IconDownSmall /> Bajas: <b>{r.muertos}</b></span>
-                      <span><IconClockSmall /> Censos: <b>{r.censos}</b></span>
+                      <span><IconLeafSmall /> Vivos: <b>{formato(r.vivos)}</b></span>
+                      <span className="danger"><IconDownSmall /> Bajas: <b>{formato(r.muertos)}</b></span>
+                      <span><IconClockSmall /> Censos: <b>{formato(r.censos)}</b></span>
                     </div>
                   </div>
                 </article>
@@ -179,8 +181,8 @@ export default function Home() {
             </div>
 
             <Resumen label="Registros activos" value={filtrados.length} icon={<IconUsers />} />
-            <Resumen label="Plantas vivas" value={totalVivos} icon={<IconLeaf />} />
-            <Resumen label="Bajas registradas" value={totalMuertos} icon={<IconDown />} danger />
+            <Resumen label="Plantas vivas" value={formato(totalVivos)} icon={<IconLeaf />} />
+            <Resumen label="Bajas registradas" value={formato(totalMuertos)} icon={<IconDown />} danger />
             <Resumen label="Avance promedio" value={`${avance}%`} icon={<IconProgress />} />
 
             <div className="bv-state">
@@ -198,28 +200,20 @@ export default function Home() {
                 <span>{filtrados.length} registros</span>
               </div>
 
-              <div className="bv-dist-bars">
-                <div className="bv-dist-row">
-                  <span>Operativo</span>
-                  <div><i style={{ width: `${filtrados.length ? (operativo / filtrados.length) * 100 : 0}%` }} /></div>
-                  <b>{operativo}</b>
-                </div>
-
-                <div className="bv-dist-row">
-                  <span>Seguimiento</span>
-                  <div><i style={{ width: `${filtrados.length ? (seguimiento / filtrados.length) * 100 : 0}%` }} /></div>
-                  <b>{seguimiento}</b>
-                </div>
-
-                <div className="bv-dist-row">
-                  <span>Planificado</span>
-                  <div><i style={{ width: `${filtrados.length ? (planificado / filtrados.length) * 100 : 0}%` }} /></div>
-                  <b>{planificado}</b>
-                </div>
-              </div>
+              <DistRow label="Operativo" value={operativo} total={filtrados.length} />
+              <DistRow label="Seguimiento" value={seguimiento} total={filtrados.length} />
+              <DistRow label="Planificado" value={planificado} total={filtrados.length} />
             </div>
           </aside>
         </section>
+
+        <footer className="bv-footer">
+          <div><IconLeaf /> Simple <span>Intuitivo y claro</span></div>
+          <div><IconChart /> Visual <span>Información clave</span></div>
+          <div><IconShield /> Confiable <span>Datos trazables</span></div>
+          <div><IconCloud /> Accesible <span>Web y móvil</span></div>
+          <strong><IconCheck /> Diseñado para decisiones rápidas y efectivas</strong>
+        </footer>
 
         <nav className="bv-mobile-nav">
           <span><IconHome /><small>Inicio</small></span>
@@ -303,6 +297,18 @@ function Resumen({
   );
 }
 
+function DistRow({ label, value, total }: { label: string; value: number; total: number }) {
+  const pct = total > 0 ? (value / total) * 100 : 0;
+
+  return (
+    <div className="bv-dist-row">
+      <span>{label}</span>
+      <div><i style={{ width: `${pct}%` }} /></div>
+      <b>{value}</b>
+    </div>
+  );
+}
+
 function Svg({ children }: { children: ReactNode }) {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round">{children}</svg>;
 }
@@ -317,13 +323,15 @@ function IconLeaf() { return <Svg><path d="M20 4C11 4 5 9 5 17c0 2 1 3 3 3 8 0 1
 function IconDown() { return <Svg><path d="M7 7l10 10M17 10v7h-7" /></Svg>; }
 function IconProgress() { return <Svg><path d="M12 3v9l6 3" /><circle cx="12" cy="12" r="9" /></Svg>; }
 function IconMountain() { return <Svg><path d="M3 20h18L14 6l-4 8-2-4Z" /></Svg>; }
-function IconCommit() { return <Svg><path d="M7 12h10M7 12a4 4 0 1 1-4-4 4 4 0 0 1 4 4ZM21 12a4 4 0 1 1-4-4 4 4 0 0 1 4 4Z" /></Svg>; }
+function IconShield() { return <Svg><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" /><path d="M9 12l2 2 4-5" /></Svg>; }
 function IconList() { return <Svg><path d="M8 6h13M8 12h13M8 18h13" /><path d="M3 6h.01M3 12h.01M3 18h.01" /></Svg>; }
 function IconChart() { return <Svg><path d="M3 3v18h18" /><path d="M7 16l4-5 4 3 5-8" /></Svg>; }
 function IconUsers() { return <Svg><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" /><circle cx="9.5" cy="7" r="4" /><path d="M17 11a4 4 0 0 0 0-8M21 21v-2a4 4 0 0 0-3-3.8" /></Svg>; }
 function IconClock() { return <Svg><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></Svg>; }
 function IconHome() { return <Svg><path d="M3 11l9-8 9 8" /><path d="M5 10v11h14V10" /></Svg>; }
 function IconMore() { return <Svg><path d="M5 12h.01M12 12h.01M19 12h.01" /></Svg>; }
+function IconCloud() { return <Svg><path d="M17.5 19H8a5 5 0 1 1 1.1-9.9A7 7 0 0 1 22 12.5 4.5 4.5 0 0 1 17.5 19Z" /></Svg>; }
+function IconCheck() { return <Svg><path d="M20 6L9 17l-5-5" /></Svg>; }
 function IconLeafSmall() { return <span className="inline-icon"><IconLeaf /></span>; }
 function IconDownSmall() { return <span className="inline-icon"><IconDown /></span>; }
 function IconClockSmall() { return <span className="inline-icon"><IconClock /></span>; }
@@ -343,7 +351,7 @@ const css = `
   height: calc(100vh - 12px);
   margin: 0 auto;
   display: grid;
-  grid-template-rows: 58px 46px 50px 1fr;
+  grid-template-rows: 58px 46px 50px 1fr 34px;
   gap: 5px;
 }
 
@@ -365,17 +373,17 @@ const css = `
 }
 
 .bv-logo-box {
-  width: 56px;
-  height: 46px;
+  width: 64px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .bv-logo-img {
-  width: 58px;
-  height: 58px;
+  width: 76px;
+  height: 76px;
   object-fit: contain;
 }
 
@@ -838,6 +846,44 @@ const css = `
   color: #0f7a3c;
 }
 
+.bv-footer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) 1.5fr;
+  gap: 6px;
+  align-items: center;
+}
+
+.bv-footer div,
+.bv-footer strong {
+  height: 34px;
+  border-radius: 13px;
+  background: rgba(255,255,255,.86);
+  border: 1px solid #e1eadf;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+  font-size: 11px;
+  color: #102015;
+  box-shadow: 0 3px 10px rgba(0,0,0,.03);
+}
+
+.bv-footer svg {
+  width: 17px;
+  height: 17px;
+  color: #0f7a3c;
+}
+
+.bv-footer span {
+  color: #68766d;
+}
+
+.bv-footer strong {
+  background: linear-gradient(135deg, #e1f2e4, #f8fff8);
+  color: #0b3b28;
+  font-size: 12px;
+}
+
 .bv-mobile-nav {
   display: none;
 }
@@ -862,6 +908,10 @@ a {
   .bv-shell {
     height: auto;
     display: block;
+  }
+
+  .bv-footer {
+    display: none;
   }
 
   .bv-header {
