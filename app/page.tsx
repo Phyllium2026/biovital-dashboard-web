@@ -88,6 +88,10 @@ export default function Home() {
       ? Math.round(filtrados.reduce((a, b) => a + b.avance, 0) / filtrados.length)
       : 0;
 
+  const operativo = filtrados.filter((r) => r.estado === 'Operativo').length;
+  const seguimiento = filtrados.filter((r) => r.estado === 'Seguimiento').length;
+  const planificado = filtrados.filter((r) => r.estado === 'Planificado').length;
+
   const estadoGeneral =
     avance >= 75 ? 'CONTROLADO' : avance >= 50 ? 'EN SEGUIMIENTO' : 'CRÍTICO';
 
@@ -180,9 +184,39 @@ export default function Home() {
             <Resumen label="Avance promedio" value={`${avance}%`} icon={<IconProgress />} />
 
             <div className="bv-state">
-              <small>Estado general</small>
-              <h3>{estadoGeneral}</h3>
-              <p><b>{avance}%</b> de avance promedio consolidado por año, predio, compromiso y empresa ejecutora.</p>
+              <div>
+                <small>Estado general</small>
+                <h3>{estadoGeneral}</h3>
+                <p><b>{avance}%</b> de avance promedio consolidado.</p>
+              </div>
+              <div className="bv-state-icon"><IconLeaf /></div>
+            </div>
+
+            <div className="bv-distribution">
+              <div className="bv-dist-head">
+                <strong>Distribución por estado</strong>
+                <span>{filtrados.length} registros</span>
+              </div>
+
+              <div className="bv-dist-bars">
+                <div className="bv-dist-row">
+                  <span>Operativo</span>
+                  <div><i style={{ width: `${filtrados.length ? (operativo / filtrados.length) * 100 : 0}%` }} /></div>
+                  <b>{operativo}</b>
+                </div>
+
+                <div className="bv-dist-row">
+                  <span>Seguimiento</span>
+                  <div><i style={{ width: `${filtrados.length ? (seguimiento / filtrados.length) * 100 : 0}%` }} /></div>
+                  <b>{seguimiento}</b>
+                </div>
+
+                <div className="bv-dist-row">
+                  <span>Planificado</span>
+                  <div><i style={{ width: `${filtrados.length ? (planificado / filtrados.length) * 100 : 0}%` }} /></div>
+                  <b>{planificado}</b>
+                </div>
+              </div>
             </div>
           </aside>
         </section>
@@ -270,7 +304,7 @@ function Resumen({
 }
 
 function Svg({ children }: { children: ReactNode }) {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">{children}</svg>;
+  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round">{children}</svg>;
 }
 
 function IconPlus() { return <Svg><path d="M12 5v14M5 12h14" /></Svg>; }
@@ -331,19 +365,18 @@ const css = `
 }
 
 .bv-logo-box {
-  width: 60px;
-  height: 48px;
+  width: 56px;
+  height: 46px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .bv-logo-img {
-  width: 66px;
-  height: 66px;
+  width: 58px;
+  height: 58px;
   object-fit: contain;
-  transform: scale(1.08);
 }
 
 .bv-header h1 {
@@ -374,7 +407,20 @@ const css = `
   gap: 7px;
 }
 
+.bv-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.bv-filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  min-height: 0;
+}
+
 .bv-filter {
+  height: 46px;
   background: white;
   border: 1px solid #e1eadf;
   border-radius: 13px;
@@ -385,7 +431,51 @@ const css = `
   box-shadow: 0 3px 10px rgba(0,0,0,.03);
 }
 
+.bv-filter-icon,
+.bv-iconbox {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: #e9f6ed;
+  color: #0f7a3c;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+
+.bv-filter-icon svg,
+.bv-iconbox svg {
+  width: 21px;
+  height: 21px;
+}
+
+.bv-filter small {
+  display: block;
+  color: #68766d;
+  font-weight: 800;
+  font-size: 10px;
+  margin-bottom: 0;
+}
+
+.bv-filter select {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 900;
+  color: #102015;
+  width: 100%;
+}
+
+.bv-kpis {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  min-height: 0;
+}
+
 .bv-kpi {
+  height: 50px;
   background: white;
   border: 1px solid #e1eadf;
   border-radius: 13px;
@@ -482,27 +572,27 @@ const css = `
   background: #fbfefb;
   border: 1px solid #e1eadf;
   border-radius: 15px;
-  padding: 9px 11px;
+  padding: 8px 10px;
   display: grid;
-  grid-template-columns: 46px 1fr;
-  gap: 10px;
-  margin-bottom: 7px;
+  grid-template-columns: 44px 1fr;
+  gap: 9px;
+  margin-bottom: 6px;
 }
 
 .bv-card-icon {
-  width: 41px;
-  height: 41px;
+  width: 39px;
+  height: 39px;
   border-radius: 999px;
   background: #edf7ec;
   color: #0f7a3c;
   display: grid;
   place-items: center;
-  box-shadow: 0 5px 12px rgba(0,0,0,.045);
+  box-shadow: 0 5px 12px rgba(0,0,0,.04);
 }
 
 .bv-card-icon svg {
-  width: 26px;
-  height: 26px;
+  width: 25px;
+  height: 25px;
 }
 
 .bv-topline {
@@ -519,14 +609,14 @@ const css = `
 
 .bv-card h3 {
   margin: 1px 0 1px;
-  font-size: 17px;
+  font-size: 16px;
   line-height: 1.05;
 }
 
 .bv-card p {
   margin: 0;
   color: #53635a;
-  font-size: 12px;
+  font-size: 11.5px;
 }
 
 .bv-status {
@@ -580,7 +670,7 @@ const css = `
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   margin-top: 6px;
-  font-size: 11.2px;
+  font-size: 11px;
   color: #405247;
 }
 
@@ -648,13 +738,16 @@ const css = `
 }
 
 .bv-state {
-  margin-top: 5px;
   background: linear-gradient(135deg, #e1f2e4, #f8fff8);
   border-radius: 14px;
-  padding: 10px 12px;
-  height: 94px;
+  padding: 9px 11px;
+  height: 78px;
   border: 1px solid #dceee2;
-  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 48px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
 }
 
 .bv-state small {
@@ -664,8 +757,8 @@ const css = `
 }
 
 .bv-state h3 {
-  margin: 5px 0 4px;
-  font-size: 24px;
+  margin: 4px 0 3px;
+  font-size: 21px;
   color: #0f7a3c;
   line-height: 1;
 }
@@ -673,8 +766,76 @@ const css = `
 .bv-state p {
   margin: 0;
   color: #405247;
-  font-size: 11.2px;
-  line-height: 1.25;
+  font-size: 10.8px;
+  line-height: 1.2;
+}
+
+.bv-state-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.72);
+  display: grid;
+  place-items: center;
+  color: #0f7a3c;
+}
+
+.bv-state-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.bv-distribution {
+  background: white;
+  border: 1px solid #e1eadf;
+  border-radius: 14px;
+  padding: 9px 11px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.03);
+}
+
+.bv-dist-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 7px;
+}
+
+.bv-dist-head strong {
+  font-size: 12.5px;
+  color: #102015;
+}
+
+.bv-dist-head span {
+  font-size: 10.5px;
+  color: #68766d;
+}
+
+.bv-dist-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 18px;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 11px;
+  color: #405247;
+}
+
+.bv-dist-row div {
+  height: 6px;
+  background: #dfe8dd;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.bv-dist-row i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #0f7a3c, #2dbb6a);
+  border-radius: 999px;
+}
+
+.bv-dist-row b {
+  color: #0f7a3c;
 }
 
 .bv-mobile-nav {
@@ -711,14 +872,13 @@ a {
   }
 
   .bv-logo-box {
-    width: 54px;
-    height: 46px;
+    width: 48px;
+    height: 42px;
   }
 
   .bv-logo-img {
-    width: 70px;
-    height: 70px;
-    transform: scale(1.25);
+    width: 48px;
+    height: 48px;
   }
 
   .bv-header h1 {
@@ -753,7 +913,7 @@ a {
   }
 
   .bv-kpi {
-    min-height: 58px;
+    height: 58px;
     padding: 8px 9px;
   }
 
@@ -804,7 +964,7 @@ a {
 
   .bv-state {
     height: auto;
-    min-height: 96px;
+    min-height: 90px;
   }
 
   .bv-state h3 {
