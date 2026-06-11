@@ -57,6 +57,32 @@ export default async function Home() {
     <main style={styles.main}>
       <section style={styles.panel}>
         <div style={styles.header}>
+  <div style={styles.headerTop}>
+    <div style={styles.brand}>
+      <img
+        src="/logo-biovital.png"
+        alt="BIOVITAL"
+        style={styles.logo}
+      />
+
+      <div>
+        <p style={styles.label}>BIOVITAL V1</p>
+
+        <h1 style={styles.title}>
+          Dashboard de Replantes Ambientales
+        </h1>
+      </div>
+    </div>
+
+    <a
+      href="https://docs.google.com/forms/d/18tqEnm3dwWAyzlbjDMMlsaJfdWyDmDxBmEC1G7WTAEc/viewform"
+      target="_blank"
+      rel="noopener noreferrer"
+      style={styles.censoButton}
+    >
+      📋 Registrar Censo
+    </a>
+  </div>
           <p style={styles.label}>BIOVITAL V1</p>
 
           <h1 style={styles.title}>
@@ -227,21 +253,21 @@ const styles: any = {
   },
 
   heroGrid: {
-    display: "grid",
-    gridTemplateColumns: "2fr 1fr",
-    gap: "22px",
-    marginBottom: "22px",
-  },
+  display: "grid",
+  gridTemplateColumns: "1.4fr 1fr",
+  gap: "18px",
+  marginBottom: "20px",
+},
 
   hero: {
     background: "linear-gradient(135deg, #2f5f2f, #6fa84f)",
     borderRadius: "24px",
-    padding: "34px",
+    padding: "24px",
     color: "#ffffff",
     display: "flex",
     gap: "24px",
     alignItems: "center",
-    minHeight: "210px",
+    minHeight: "150px",
   },
 
   heroIcon: {
@@ -376,6 +402,34 @@ const styles: any = {
   },
 
   right: {
-    textAlign: "right",
-  },
+  textAlign: "right",
+},
+
+headerTop: {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  gap: "20px",
+},
+
+brand: {
+  display: "flex",
+  alignItems: "center",
+  gap: "16px",
+},
+
+logo: {
+  height: "56px",
+  width: "56px",
+},
+
+censoButton: {
+  background: "#2f5f2f",
+  color: "#ffffff",
+  padding: "12px 18px",
+  borderRadius: "12px",
+  textDecoration: "none",
+  fontWeight: 700,
+  whiteSpace: "nowrap",
+},
 };
