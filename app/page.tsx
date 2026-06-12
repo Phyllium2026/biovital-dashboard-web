@@ -919,7 +919,7 @@ a {
     height: auto;
     min-height: 100vh;
     overflow: visible;
-    padding: 8px 8px 74px;
+    padding: 8px 8px 16px;
   }
 
   .bv-shell {
