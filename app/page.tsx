@@ -45,6 +45,33 @@ type Kpis = {
   Ultima_Actualizacion?: string;
 };
 
+type SemaforoRegistro = {
+  Marca_Temporal?: string;
+  Responsable?: string;
+  Fecha?: string;
+  Contrato_Compromiso: string;
+  Predio: string;
+  Estado_Censo: string;
+  Estado_Informe: string;
+  Revision_ITO: string;
+  Observacion_Clave?: string;
+  Carga_BioVital: string;
+  Semaforo: string;
+  Estado_Global: string;
+};
+
+type SemaforoResumen = {
+  total: number;
+  critico: number;
+  medio: number;
+  bajo: number;
+};
+
+type SemaforoData = {
+  resumen: SemaforoResumen;
+  registros: SemaforoRegistro[];
+};
+
 const formato = (n: number) => new Intl.NumberFormat('es-CL').format(Math.round(n || 0));
 
 const pct = (n: number) => {
@@ -65,20 +92,30 @@ export default function Home() {
   const [eecc, setEecc] = useState('Todos');
   const [registros, setRegistros] = useState<Registro[]>([]);
   const [kpis, setKpis] = useState<Kpis>({});
+  const [semaforo, setSemaforo] = useState<SemaforoData>({
+    resumen: { total: 0, critico: 0, medio: 0, bajo: 0 },
+    registros: [],
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function cargarDatos() {
       try {
-        const [kpiRes, regRes] = await Promise.all([
+        const [kpiRes, regRes, semRes] = await Promise.all([
           fetch(`${API_URL}?view=kpis`, { cache: 'no-store' }),
           fetch(`${API_URL}?view=registros`, { cache: 'no-store' }),
+          fetch(`${API_URL}?view=semaforo`, { cache: 'no-store' }),
         ]);
 
         const kpiJson = await kpiRes.json();
         const regJson = await regRes.json();
+        const semJson = await semRes.json();
 
         setKpis(kpiJson.data || {});
+        setSemaforo(semJson.data || {
+          resumen: { total: 0, critico: 0, medio: 0, bajo: 0 },
+          registros: [],
+        });
 
         const normalizados: Registro[] = (regJson.data || []).map((r: RegistroApi) => {
           const avance = Math.max(0, Math.min(100, Number(r.Prendimiento_Porc || 0)));
@@ -140,6 +177,25 @@ export default function Home() {
     avance >= 75 ? 'CONTROLADO' : avance >= 50 ? 'EN SEGUIMIENTO' : 'CRÍTICO';
 
   const registrosVista = filtrados.slice(0, 6);
+
+  const resumenSemaforo = semaforo.resumen;
+  const estadoGestion =
+    resumenSemaforo.critico > 0
+      ? 'REQUIERE GESTIÓN INMEDIATA'
+      : resumenSemaforo.medio > 0
+      ? 'EN SEGUIMIENTO'
+      : 'CONTROLADO';
+
+  const estadoGestionClass =
+    resumenSemaforo.critico > 0
+      ? 'critico'
+      : resumenSemaforo.medio > 0
+      ? 'medio'
+      : 'bajo';
+
+  const criticosVista = semaforo.registros
+    .filter((r) => r.Semaforo.includes('Crítico'))
+    .slice(0, 5);
 
   return (
     <main className="bv-main">
@@ -248,6 +304,40 @@ export default function Home() {
               <DistRow label="Seguimiento" value={seguimiento} total={filtrados.length} />
               <DistRow label="Crítico" value={critico} total={filtrados.length} />
             </div>
+
+            <div className="bv-semaforo">
+              <div className="bv-semaforo-head">
+                <strong><IconTraffic /> Semáforo actualización censos</strong>
+                <span>{resumenSemaforo.total} compromisos</span>
+              </div>
+
+              <div className="bv-semaforo-grid">
+                <div className="critico"><small>Críticos</small><b>{resumenSemaforo.critico}</b></div>
+                <div className="medio"><small>Seguimiento</small><b>{resumenSemaforo.medio}</b></div>
+                <div className="bajo"><small>Controlados</small><b>{resumenSemaforo.bajo}</b></div>
+              </div>
+
+              <div className={`bv-gestion ${estadoGestionClass}`}>
+                <small>Estado gestión</small>
+                <strong>{estadoGestion}</strong>
+              </div>
+
+              <div className="bv-critical-list">
+                {criticosVista.length > 0 ? (
+                  criticosVista.map((r) => (
+                    <div key={`${r.Contrato_Compromiso}-${r.Predio}-${r.Fecha}`}>
+                      <span>{r.Contrato_Compromiso}</span>
+                      <small>{r.Predio} · {r.Carga_BioVital}</small>
+                    </div>
+                  ))
+                ) : (
+                  <div>
+                    <span>Sin críticos</span>
+                    <small>Compromisos controlados</small>
+                  </div>
+                )}
+              </div>
+            </div>
           </aside>
         </section>
 
@@ -349,6 +439,7 @@ function IconMountain() { return <Svg><path d="M3 20h18L14 6l-4 8-2-4Z" /></Svg>
 function IconShield() { return <Svg><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" /><path d="M9 12l2 2 4-5" /></Svg>; }
 function IconList() { return <Svg><path d="M8 6h13M8 12h13M8 18h13" /><path d="M3 6h.01M3 12h.01M3 18h.01" /></Svg>; }
 function IconChart() { return <Svg><path d="M3 3v18h18" /><path d="M7 16l4-5 4 3 5-8" /></Svg>; }
+function IconTraffic() { return <Svg><path d="M12 2v3" /><path d="M12 19v3" /><path d="M4.9 4.9l2.1 2.1" /><path d="M17 17l2.1 2.1" /><path d="M2 12h3" /><path d="M19 12h3" /><circle cx="12" cy="12" r="4" /></Svg>; }
 function IconUsers() { return <Svg><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" /><circle cx="9.5" cy="7" r="4" /><path d="M17 11a4 4 0 0 0 0-8M21 21v-2a4 4 0 0 0-3-3.8" /></Svg>; }
 function IconClock() { return <Svg><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></Svg>; }
 function IconHome() { return <Svg><path d="M3 11l9-8 9 8" /><path d="M5 10v11h14V10" /></Svg>; }
@@ -721,7 +812,7 @@ const css = `
   height: 100%;
   background: linear-gradient(145deg, #f8fff8, #edf7ed);
   display: grid;
-  grid-template-rows: 28px repeat(4, 38px) 62px 1fr;
+  grid-template-rows: 28px repeat(4, 38px) 58px 74px minmax(0, 1fr);
   gap: 4px;
   align-self: stretch;
 }
@@ -863,6 +954,130 @@ const css = `
 
 .bv-dist-row b {
   color: #0f7a3c;
+}
+
+.bv-semaforo {
+  min-height: 0;
+  background: white;
+  border: 1px solid #e1eadf;
+  border-radius: 14px;
+  padding: 7px 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.03);
+  overflow: hidden;
+}
+
+.bv-semaforo-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.bv-semaforo-head strong {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: #102015;
+}
+
+.bv-semaforo-head svg {
+  width: 15px;
+  height: 15px;
+  color: #0f7a3c;
+}
+
+.bv-semaforo-head span {
+  font-size: 9.5px;
+  color: #68766d;
+}
+
+.bv-semaforo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+.bv-semaforo-grid div {
+  border-radius: 10px;
+  padding: 5px 6px;
+  background: #f7faf6;
+  border: 1px solid #e1eadf;
+}
+
+.bv-semaforo-grid small {
+  display: block;
+  font-size: 8.5px;
+  color: #68766d;
+  font-weight: 800;
+}
+
+.bv-semaforo-grid b {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.bv-semaforo-grid .critico b { color: #c84a12; }
+.bv-semaforo-grid .medio b { color: #b7791f; }
+.bv-semaforo-grid .bajo b { color: #0f7a3c; }
+
+.bv-gestion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  padding: 5px 7px;
+  margin-bottom: 5px;
+  background: #f7faf6;
+  border: 1px solid #e1eadf;
+}
+
+.bv-gestion small {
+  font-size: 8.5px;
+  color: #68766d;
+  font-weight: 900;
+}
+
+.bv-gestion strong {
+  font-size: 10px;
+  line-height: 1;
+}
+
+.bv-gestion.critico strong { color: #c84a12; }
+.bv-gestion.medio strong { color: #b7791f; }
+.bv-gestion.bajo strong { color: #0f7a3c; }
+
+.bv-critical-list {
+  display: grid;
+  gap: 3px;
+  max-height: 78px;
+  overflow: auto;
+  padding-right: 3px;
+}
+
+.bv-critical-list div {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 6px;
+  align-items: center;
+  font-size: 9.5px;
+  color: #405247;
+}
+
+.bv-critical-list span {
+  color: #c84a12;
+  font-weight: 900;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bv-critical-list small {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #68766d;
 }
 
 .bv-footer {
@@ -1036,6 +1251,14 @@ a {
 
   .bv-state h3 {
     font-size: 22px;
+  }
+
+  .bv-semaforo {
+    margin-top: 0;
+  }
+
+  .bv-critical-list {
+    max-height: none;
   }
 
 
