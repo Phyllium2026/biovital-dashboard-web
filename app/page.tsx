@@ -6,6 +6,7 @@ import type { ReactNode } from 'react';
 const API_URL =
   'https://script.google.com/macros/s/AKfycbzQLbAOH-fVOQqQFiKg-kU9r7bf5sv0V8GSzDo4UAiD4d0dP3_l0rxPhK5_4BKregA/exec';
 
+
 type RegistroApi = {
   ID_BIOVITAL: string;
   Anio: number | string;
@@ -213,9 +214,19 @@ export default function Home() {
             </div>
           </div>
 
-          <a className="bv-button" href="/registrar">
-            <IconPlus /> Registrar Censo
-          </a>
+          <div className="bv-actions">
+            <a className="bv-button" href="/registrar">
+              <IconPlus /> Registrar Censo
+            </a>
+            <a
+              className="bv-button bv-button-secondary"
+              href={FORM_ESTADO_CENSOS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <IconClipboard /> Actualizar Estado
+            </a>
+          </div>
         </header>
 
         <section className="bv-filters">
@@ -534,6 +545,19 @@ const css = `
   height: 16px;
 }
 
+.bv-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bv-button-secondary {
+  background: #ffffff;
+  color: #0f7a3c;
+  border: 1px solid #cfe8d8;
+  box-shadow: 0 5px 14px rgba(0,0,0,.05);
+}
+
 .bv-filters {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -812,9 +836,10 @@ const css = `
   height: 100%;
   background: linear-gradient(145deg, #f8fff8, #edf7ed);
   display: grid;
-  grid-template-rows: 28px repeat(4, 38px) 58px 74px minmax(0, 1fr);
+  grid-template-rows: 24px repeat(4, 34px) 56px 72px 96px;
   gap: 4px;
   align-self: stretch;
+  overflow: hidden;
 }
 
 .exec-head {
@@ -822,7 +847,7 @@ const css = `
 }
 
 .bv-summary {
-  height: 38px;
+  height: 34px;
   background: white;
   border: 1px solid #e1eadf;
   border-radius: 13px;
@@ -835,8 +860,8 @@ const css = `
 }
 
 .bv-summary .bv-iconbox {
-  width: 27px;
-  height: 27px;
+  width: 25px;
+  height: 25px;
   border-radius: 10px;
 }
 
@@ -848,18 +873,18 @@ const css = `
 .bv-summary p {
   margin: 0;
   font-weight: 800;
-  font-size: 11.5px;
+  font-size: 11px;
 }
 
 .bv-summary strong {
   color: #0f7a3c;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .bv-state {
   background: linear-gradient(135deg, #e1f2e4, #f8fff8);
   border-radius: 14px;
-  padding: 7px 10px;
+  padding: 6px 10px;
   border: 1px solid #dceee2;
   display: grid;
   grid-template-columns: 1fr 38px;
@@ -874,8 +899,8 @@ const css = `
 }
 
 .bv-state h3 {
-  margin: 2px 0 2px;
-  font-size: 17px;
+  margin: 1px 0 1px;
+  font-size: 15px;
   color: #0f7a3c;
   line-height: 1;
 }
@@ -883,13 +908,13 @@ const css = `
 .bv-state p {
   margin: 0;
   color: #405247;
-  font-size: 9.8px;
-  line-height: 1.12;
+  font-size: 9px;
+  line-height: 1.05;
 }
 
 .bv-state-icon {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 999px;
   background: rgba(255,255,255,.72);
   display: grid;
@@ -906,16 +931,17 @@ const css = `
   background: white;
   border: 1px solid #e1eadf;
   border-radius: 14px;
-  padding: 7px 10px;
+  padding: 6px 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,.03);
   overflow: hidden;
+  flex: 0 0 auto;
 }
 
 .bv-dist-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
 }
 
 .bv-dist-head strong {
@@ -930,16 +956,16 @@ const css = `
 
 .bv-dist-row {
   display: grid;
-  grid-template-columns: 74px 1fr 15px;
+  grid-template-columns: 70px 1fr 15px;
   align-items: center;
-  gap: 7px;
-  margin-top: 4px;
-  font-size: 10px;
+  gap: 6px;
+  margin-top: 3px;
+  font-size: 9.4px;
   color: #405247;
 }
 
 .bv-dist-row div {
-  height: 5px;
+  height: 4px;
   background: #dfe8dd;
   border-radius: 999px;
   overflow: hidden;
@@ -957,11 +983,12 @@ const css = `
 }
 
 .bv-semaforo {
+  height: 96px;
   min-height: 0;
   background: white;
   border: 1px solid #e1eadf;
   border-radius: 14px;
-  padding: 7px 10px;
+  padding: 5px 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,.03);
   overflow: hidden;
 }
@@ -970,14 +997,14 @@ const css = `
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
 }
 
 .bv-semaforo-head strong {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 11.5px;
+  font-size: 11px;
   color: #102015;
 }
 
@@ -995,26 +1022,26 @@ const css = `
 .bv-semaforo-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
-  margin-bottom: 5px;
+  gap: 4px;
+  margin-bottom: 3px;
 }
 
 .bv-semaforo-grid div {
-  border-radius: 10px;
-  padding: 5px 6px;
+  border-radius: 9px;
+  padding: 3px 5px;
   background: #f7faf6;
   border: 1px solid #e1eadf;
 }
 
 .bv-semaforo-grid small {
   display: block;
-  font-size: 8.5px;
+  font-size: 8px;
   color: #68766d;
   font-weight: 800;
 }
 
 .bv-semaforo-grid b {
-  font-size: 15px;
+  font-size: 13px;
   line-height: 1;
 }
 
@@ -1026,21 +1053,21 @@ const css = `
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-radius: 10px;
-  padding: 5px 7px;
-  margin-bottom: 5px;
+  border-radius: 9px;
+  padding: 3px 6px;
+  margin-bottom: 3px;
   background: #f7faf6;
   border: 1px solid #e1eadf;
 }
 
 .bv-gestion small {
-  font-size: 8.5px;
+  font-size: 8px;
   color: #68766d;
   font-weight: 900;
 }
 
 .bv-gestion strong {
-  font-size: 10px;
+  font-size: 9px;
   line-height: 1;
 }
 
@@ -1050,18 +1077,18 @@ const css = `
 
 .bv-critical-list {
   display: grid;
-  gap: 3px;
-  max-height: 78px;
-  overflow: auto;
+  gap: 2px;
+  max-height: 18px;
+  overflow: hidden;
   padding-right: 3px;
 }
 
 .bv-critical-list div {
   display: grid;
-  grid-template-columns: 72px 1fr;
-  gap: 6px;
+  grid-template-columns: 66px 1fr;
+  gap: 5px;
   align-items: center;
-  font-size: 9.5px;
+  font-size: 8.6px;
   color: #405247;
 }
 
@@ -1177,6 +1204,22 @@ a {
     font-size: 12px;
   }
 
+  .bv-actions {
+    flex-direction: column;
+    gap: 5px;
+    align-items: stretch;
+  }
+
+  .bv-actions .bv-button {
+    height: 34px;
+    justify-content: center;
+    white-space: nowrap;
+  }
+
+  .bv-button-secondary {
+    display: none;
+  }
+
   .bv-filters {
     grid-template-columns: repeat(2, 1fr);
     gap: 7px;
@@ -1243,6 +1286,7 @@ a {
   .bv-exec {
     display: grid;
     grid-template-rows: auto;
+    overflow: visible;
   }
 
   .bv-summary {
@@ -1254,11 +1298,14 @@ a {
   }
 
   .bv-semaforo {
+    height: auto;
+    min-height: 128px;
     margin-top: 0;
   }
 
   .bv-critical-list {
     max-height: none;
+    overflow: visible;
   }
 
 
