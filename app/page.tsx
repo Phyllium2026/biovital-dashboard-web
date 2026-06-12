@@ -1,7 +1,23 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
+
+const API_URL =
+  'https://script.google.com/macros/s/AKfycbzQLbAOH-fVOQqQFiKg-kU9r7bf5sv0V8GSzDo4UAiD4d0dP3_l0rxPhK5_4BKregA/exec';
+
+type RegistroApi = {
+  ID_BIOVITAL: string;
+  Anio: number | string;
+  Predio: string;
+  Compromiso_Ambiental: string;
+  Contrato_EECC: string;
+  Especie: string;
+  Plantas_Plantadas: number;
+  Plantas_Vivas_Censo: number;
+  Plantas_Reponer: number;
+  Prendimiento_Porc: number;
+};
 
 type Registro = {
   id: string;
@@ -17,72 +33,98 @@ type Registro = {
   avance: number;
 };
 
-const DATA: Registro[] = [
-  {
-    id: 'BIO-2026-001',
-    anio: '2026',
-    predio: 'Monte Aranda',
-    compromiso: 'CCPL-1',
-    eecc: 'ABP',
-    especie: 'Porlieria chilensis',
-    estado: 'Operativo',
-    censos: 12,
-    vivos: 940,
-    muertos: 38,
-    avance: 82,
-  },
-  {
-    id: 'BIO-2026-002',
-    anio: '2026',
-    predio: 'Monte Aranda',
-    compromiso: 'CCPL-1',
-    eecc: 'ABP',
-    especie: 'Carica chilensis',
-    estado: 'Seguimiento',
-    censos: 8,
-    vivos: 323,
-    muertos: 21,
-    avance: 74,
-  },
-  {
-    id: 'BIO-2028-001',
-    anio: '2028',
-    predio: 'Monte Aranda',
-    compromiso: 'Enriquecimiento',
-    eecc: 'TKR',
-    especie: 'Porlieria chilensis',
-    estado: 'Planificado',
-    censos: 4,
-    vivos: 949,
-    muertos: 0,
-    avance: 35,
-  },
-];
+type Kpis = {
+  Total_Registros?: number;
+  Total_Especies?: number;
+  Total_Plantadas?: number;
+  Total_Vivas?: number;
+  Prendimiento_Promedio?: number;
+  Total_Reponer?: number;
+  Total_Contratos?: number;
+  Total_Predios?: number;
+  Ultima_Actualizacion?: string;
+};
 
-const formato = (n: number) => new Intl.NumberFormat('es-CL').format(n);
+const formato = (n: number) => new Intl.NumberFormat('es-CL').format(Math.round(n || 0));
+
+const pct = (n: number) => {
+  const value = n <= 1 ? n * 100 : n;
+  return `${value.toFixed(1).replace('.', ',')}%`;
+};
+
+function clasificarEstado(avance: number) {
+  if (avance >= 85) return 'Operativo';
+  if (avance >= 50) return 'Seguimiento';
+  return 'Crítico';
+}
 
 export default function Home() {
   const [anio, setAnio] = useState('Todos');
   const [predio, setPredio] = useState('Todos');
   const [compromiso, setCompromiso] = useState('Todos');
   const [eecc, setEecc] = useState('Todos');
+  const [registros, setRegistros] = useState<Registro[]>([]);
+  const [kpis, setKpis] = useState<Kpis>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function cargarDatos() {
+      try {
+        const [kpiRes, regRes] = await Promise.all([
+          fetch(`${API_URL}?view=kpis`, { cache: 'no-store' }),
+          fetch(`${API_URL}?view=registros`, { cache: 'no-store' }),
+        ]);
+
+        const kpiJson = await kpiRes.json();
+        const regJson = await regRes.json();
+
+        setKpis(kpiJson.data || {});
+
+        const normalizados: Registro[] = (regJson.data || []).map((r: RegistroApi) => {
+          const avance = Math.max(0, Math.min(100, Number(r.Prendimiento_Porc || 0)));
+
+          return {
+            id: r.ID_BIOVITAL || 'SIN-ID',
+            anio: String(r.Anio || ''),
+            predio: r.Predio || 'Sin predio',
+            compromiso: r.Compromiso_Ambiental || 'Sin compromiso',
+            eecc: r.Contrato_EECC || 'Sin EECC',
+            especie: r.Especie || 'Sin especie',
+            estado: clasificarEstado(avance),
+            censos: 1,
+            vivos: Number(r.Plantas_Vivas_Censo || 0),
+            muertos: Number(r.Plantas_Reponer || 0),
+            avance,
+          };
+        });
+
+        setRegistros(normalizados);
+      } catch (error) {
+        console.error('Error cargando BIOVITAL:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    cargarDatos();
+  }, []);
 
   const unique = (key: keyof Registro) => [
     'Todos',
-    ...Array.from(new Set(DATA.map((r) => String(r[key])))),
+    ...Array.from(new Set(registros.map((r) => String(r[key])).filter(Boolean))),
   ];
 
   const filtrados = useMemo(() => {
-    return DATA.filter(
+    return registros.filter(
       (r) =>
         (anio === 'Todos' || r.anio === anio) &&
         (predio === 'Todos' || r.predio === predio) &&
         (compromiso === 'Todos' || r.compromiso === compromiso) &&
         (eecc === 'Todos' || r.eecc === eecc)
     );
-  }, [anio, predio, compromiso, eecc]);
+  }, [registros, anio, predio, compromiso, eecc]);
 
-  const totalCensos = filtrados.reduce((a, b) => a + b.censos, 0);
+  const totalCensos = filtrados.length;
   const totalVivos = filtrados.reduce((a, b) => a + b.vivos, 0);
   const totalMuertos = filtrados.reduce((a, b) => a + b.muertos, 0);
   const avance =
@@ -92,10 +134,12 @@ export default function Home() {
 
   const operativo = filtrados.filter((r) => r.estado === 'Operativo').length;
   const seguimiento = filtrados.filter((r) => r.estado === 'Seguimiento').length;
-  const planificado = filtrados.filter((r) => r.estado === 'Planificado').length;
+  const critico = filtrados.filter((r) => r.estado === 'Crítico').length;
 
   const estadoGeneral =
     avance >= 75 ? 'CONTROLADO' : avance >= 50 ? 'EN SEGUIMIENTO' : 'CRÍTICO';
+
+  const registrosVista = filtrados.slice(0, 6);
 
   return (
     <main className="bv-main">
@@ -126,12 +170,12 @@ export default function Home() {
         </section>
 
         <section className="bv-kpis">
-          <Kpi icon={<IconFile />} title="Censos" value={formato(totalCensos)} />
-          <Kpi icon={<IconLeaf />} title="Vivos" value={formato(totalVivos)} />
-          <Kpi icon={<IconDown />} title="Bajas" value={formato(totalMuertos)} danger />
-          <Kpi icon={<IconProgress />} title="Avance" value={`${avance}%`} />
-          <Kpi icon={<IconMountain />} title="Predios" value="1" />
-          <Kpi icon={<IconShield />} title="Compromisos" value="2" />
+          <Kpi icon={<IconFile />} title="Registros" value={loading ? '...' : formato(kpis.Total_Registros || totalCensos)} />
+          <Kpi icon={<IconLeaf />} title="Vivas" value={loading ? '...' : formato(kpis.Total_Vivas || totalVivos)} />
+          <Kpi icon={<IconDown />} title="Reponer" value={loading ? '...' : formato(kpis.Total_Reponer || totalMuertos)} danger />
+          <Kpi icon={<IconProgress />} title="Prendimiento" value={loading ? '...' : pct(kpis.Prendimiento_Promedio || avance)} />
+          <Kpi icon={<IconMountain />} title="Predios" value={loading ? '...' : formato(kpis.Total_Predios || 0)} />
+          <Kpi icon={<IconShield />} title="Compromisos" value={loading ? '...' : formato(kpis.Total_Contratos || 0)} />
         </section>
 
         <section className="bv-content">
@@ -142,7 +186,7 @@ export default function Home() {
             </div>
 
             <div className="bv-list">
-              {filtrados.map((r) => (
+              {registrosVista.map((r) => (
                 <article className="bv-card" key={r.id}>
                   <div className="bv-card-icon"><IconLeaf /></div>
 
@@ -160,12 +204,12 @@ export default function Home() {
                       <div className="bv-progress">
                         <div style={{ width: `${r.avance}%` }} />
                       </div>
-                      <strong>{r.avance}%</strong>
+                      <strong>{r.avance.toFixed(1).replace('.', ',')}%</strong>
                     </div>
 
                     <div className="bv-card-stats">
                       <span><IconLeafSmall /> Vivos: <b>{formato(r.vivos)}</b></span>
-                      <span className="danger"><IconDownSmall /> Bajas: <b>{formato(r.muertos)}</b></span>
+                      <span className="danger"><IconDownSmall /> Reponer: <b>{formato(r.muertos)}</b></span>
                       <span><IconClockSmall /> Censos: <b>{formato(r.censos)}</b></span>
                     </div>
                   </div>
@@ -180,29 +224,29 @@ export default function Home() {
               <span>Resumen consolidado</span>
             </div>
 
-            <Resumen label="Registros activos" value={filtrados.length} icon={<IconUsers />} />
-            <Resumen label="Plantas vivas" value={formato(totalVivos)} icon={<IconLeaf />} />
-            <Resumen label="Bajas registradas" value={formato(totalMuertos)} icon={<IconDown />} danger />
-            <Resumen label="Avance promedio" value={`${avance}%`} icon={<IconProgress />} />
+            <Resumen label="Registros monitoreados" value={formato(kpis.Total_Registros || totalCensos)} icon={<IconUsers />} />
+            <Resumen label="Plantas vivas" value={formato(kpis.Total_Vivas || totalVivos)} icon={<IconLeaf />} />
+            <Resumen label="Plantas a reponer" value={formato(kpis.Total_Reponer || totalMuertos)} icon={<IconDown />} danger />
+            <Resumen label="Prendimiento promedio" value={pct(kpis.Prendimiento_Promedio || avance)} icon={<IconProgress />} />
 
             <div className="bv-state">
               <div>
                 <small>Estado general</small>
                 <h3>{estadoGeneral}</h3>
-                <p><b>{avance}%</b> de avance promedio consolidado.</p>
+                <p><b>{avance}%</b> de prendimiento promedio filtrado.</p>
               </div>
               <div className="bv-state-icon"><IconLeaf /></div>
             </div>
 
             <div className="bv-distribution">
               <div className="bv-dist-head">
-                <strong>Distribución por estado</strong>
+                <strong>Distribución operacional</strong>
                 <span>{filtrados.length} registros</span>
               </div>
 
               <DistRow label="Operativo" value={operativo} total={filtrados.length} />
               <DistRow label="Seguimiento" value={seguimiento} total={filtrados.length} />
-              <DistRow label="Planificado" value={planificado} total={filtrados.length} />
+              <DistRow label="Crítico" value={critico} total={filtrados.length} />
             </div>
           </aside>
         </section>
