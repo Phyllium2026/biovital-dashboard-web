@@ -157,7 +157,7 @@ export default function Home() {
             </div>
           </div>
 
-          <a className="bv-button" href="https://docs.google.com/forms/d/18tqEnm3dwWAyzlbjDMMlsaJfdWyDmDxBmEC1G7WTAEc/edit">
+          <a className="bv-button" href="/registrar">
             <IconPlus /> Registrar Censo
           </a>
         </header>
@@ -259,13 +259,7 @@ export default function Home() {
           <strong><IconCheck /> Diseñado para decisiones rápidas</strong>
         </footer>
 
-        <nav className="bv-mobile-nav">
-          <span><IconHome /><small>Inicio</small></span>
-          <span><IconList /><small>Registros</small></span>
-          <span className="active"><IconPlus /></span>
-          <span><IconChart /><small>Reportes</small></span>
-          <span><IconMore /><small>Más</small></span>
-        </nav>
+    
       </section>
     </main>
   );
@@ -909,9 +903,7 @@ const css = `
   font-size: 12px;
 }
 
-.bv-mobile-nav {
-  display: none;
-}
+
 
 svg {
   width: 1em;
@@ -1046,45 +1038,6 @@ a {
     font-size: 22px;
   }
 
-  .bv-mobile-nav {
-    position: fixed;
-    left: 8px;
-    right: 8px;
-    bottom: 8px;
-    height: 56px;
-    background: white;
-    border: 1px solid #dfe8dd;
-    border-radius: 19px;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    align-items: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,.15);
-    z-index: 50;
-  }
 
-  .bv-mobile-nav span {
-    display: grid;
-    place-items: center;
-    font-size: 17px;
-    color: #53635a;
-  }
-
-  .bv-mobile-nav svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  .bv-mobile-nav small {
-    font-size: 10px;
-  }
-
-  .bv-mobile-nav .active {
-    width: 44px;
-    height: 44px;
-    background: #0f7a3c;
-    color: white;
-    border-radius: 999px;
-    margin: 0 auto;
-  }
 }
 `;
