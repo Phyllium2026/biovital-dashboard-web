@@ -20,7 +20,7 @@ export default function RegistrarPage() {
         </a>
 
         <a
-          href="PEGA_AQUI_URL_PUBLICA_DEL_FORMULARIO_ESTADO_CENSOS"
+          href="https://docs.google.com/forms/d/1wGHBlVF1RpGrpDMlQbnPX1oCsdbzM_0w5FL6AQfXtMo/edit"
           target="_blank"
           rel="noopener noreferrer"
           style={styles.secondaryActionButton}
