@@ -157,7 +157,7 @@ export default function Home() {
             </div>
           </div>
 
-          <a className="bv-button" href="#">
+          <a className="bv-button" href="https://docs.google.com/forms/d/18tqEnm3dwWAyzlbjDMMlsaJfdWyDmDxBmEC1G7WTAEc/edit">
             <IconPlus /> Registrar Censo
           </a>
         </header>
@@ -547,7 +547,7 @@ const css = `
   display: grid;
   grid-template-columns: 1.28fr 1fr;
   gap: 8px;
-  align-items: start;
+  align-items: stretch;
   overflow: hidden;
 }
 
@@ -562,8 +562,10 @@ const css = `
 }
 
 .bv-panel {
-  height: fit-content;
-  align-self: start;
+  height: 100%;
+  align-self: stretch;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
 }
 
 .bv-panel-head {
@@ -593,8 +595,9 @@ const css = `
 }
 
 .bv-list {
-  overflow: visible;
-  padding-right: 0;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 4px;
 }
 
 .bv-card {
@@ -721,11 +724,12 @@ const css = `
 }
 
 .bv-exec {
+  height: 100%;
   background: linear-gradient(145deg, #f8fff8, #edf7ed);
   display: grid;
-  grid-template-rows: 28px repeat(4, 38px) 62px 86px;
+  grid-template-rows: 28px repeat(4, 38px) 62px 1fr;
   gap: 4px;
-  align-self: start;
+  align-self: stretch;
 }
 
 .exec-head {
