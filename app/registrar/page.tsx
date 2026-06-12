@@ -15,7 +15,7 @@ export default function RegistrarPage() {
           href="https://docs.google.com/forms/d/e/18tqEnm3dwWAyzlbjDMMlsaJfdWyDmDxBmEC1G7WTAEc/viewform"
           style={styles.primaryButton}
         >
-          <ClipboardIcon />
+          
           Registrar Censo
         </a>
 
@@ -25,7 +25,7 @@ export default function RegistrarPage() {
           rel="noopener noreferrer"
           style={styles.secondaryActionButton}
         >
-          <TrafficIcon />
+         
           Actualizar Estado de Censos
         </a>
 
