@@ -290,9 +290,12 @@ function DistRow({ label, value, total }: { label: string; value: number; total:
     </div>
   );
 }
-
 function Svg({ children }: { children: ReactNode }) {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round">{children}</svg>;
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round">
+      {children}
+    </svg>
+  );
 }
 
 function IconPlus() { return <Svg><path d="M12 5v14M5 12h14" /></Svg>; }
@@ -333,7 +336,7 @@ const css = `
   height: calc(100vh - 14px);
   margin: 0 auto;
   display: grid;
-  grid-template-rows: 72px 46px 50px 1fr 34px;
+  grid-template-rows: 72px 46px 50px minmax(0, 1fr) 34px;
   gap: 5px;
 }
 
@@ -501,6 +504,7 @@ const css = `
   grid-template-columns: 1.28fr 1fr;
   gap: 8px;
   align-items: start;
+  overflow: hidden;
 }
 
 .bv-panel,
@@ -515,6 +519,7 @@ const css = `
 
 .bv-panel {
   height: fit-content;
+  align-self: start;
 }
 
 .bv-panel-head {
@@ -674,8 +679,9 @@ const css = `
 .bv-exec {
   background: linear-gradient(145deg, #f8fff8, #edf7ed);
   display: grid;
-  grid-template-rows: 28px repeat(4, 42px) 72px 105px;
-  gap: 5px;
+  grid-template-rows: 28px repeat(4, 38px) 62px 86px;
+  gap: 4px;
+  align-self: start;
 }
 
 .exec-head {
@@ -683,60 +689,60 @@ const css = `
 }
 
 .bv-summary {
-  height: 42px;
+  height: 38px;
   background: white;
   border: 1px solid #e1eadf;
   border-radius: 13px;
   display: grid;
-  grid-template-columns: 32px 1fr auto;
+  grid-template-columns: 30px 1fr auto;
   align-items: center;
-  gap: 9px;
-  padding: 5px 10px;
+  gap: 8px;
+  padding: 5px 9px;
   box-shadow: 0 4px 12px rgba(0,0,0,.035);
 }
 
 .bv-summary .bv-iconbox {
-  width: 28px;
-  height: 28px;
+  width: 27px;
+  height: 27px;
   border-radius: 10px;
 }
 
 .bv-summary .bv-iconbox svg {
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
 }
 
 .bv-summary p {
   margin: 0;
   font-weight: 800;
-  font-size: 12px;
+  font-size: 11.5px;
 }
 
 .bv-summary strong {
   color: #0f7a3c;
-  font-size: 17px;
+  font-size: 16px;
 }
 
 .bv-state {
   background: linear-gradient(135deg, #e1f2e4, #f8fff8);
   border-radius: 14px;
-  padding: 8px 11px;
+  padding: 7px 10px;
   border: 1px solid #dceee2;
   display: grid;
-  grid-template-columns: 1fr 42px;
+  grid-template-columns: 1fr 38px;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
 
 .bv-state small {
   color: #0f7a3c;
   font-weight: 900;
-  font-size: 10px;
+  font-size: 9.8px;
 }
 
 .bv-state h3 {
-  margin: 3px 0 2px;
-  font-size: 19px;
+  margin: 2px 0 2px;
+  font-size: 17px;
   color: #0f7a3c;
   line-height: 1;
 }
@@ -744,13 +750,13 @@ const css = `
 .bv-state p {
   margin: 0;
   color: #405247;
-  font-size: 10px;
-  line-height: 1.15;
+  font-size: 9.8px;
+  line-height: 1.12;
 }
 
 .bv-state-icon {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
   background: rgba(255,255,255,.72);
   display: grid;
@@ -759,42 +765,43 @@ const css = `
 }
 
 .bv-state-icon svg {
-  width: 25px;
-  height: 25px;
+  width: 23px;
+  height: 23px;
 }
 
 .bv-distribution {
   background: white;
   border: 1px solid #e1eadf;
   border-radius: 14px;
-  padding: 8px 11px;
+  padding: 7px 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,.03);
+  overflow: hidden;
 }
 
 .bv-dist-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .bv-dist-head strong {
-  font-size: 12px;
+  font-size: 11.5px;
   color: #102015;
 }
 
 .bv-dist-head span {
-  font-size: 10px;
+  font-size: 9.5px;
   color: #68766d;
 }
 
 .bv-dist-row {
   display: grid;
-  grid-template-columns: 76px 1fr 16px;
+  grid-template-columns: 74px 1fr 15px;
   align-items: center;
   gap: 7px;
-  margin-top: 5px;
-  font-size: 10.5px;
+  margin-top: 4px;
+  font-size: 10px;
   color: #405247;
 }
 
@@ -944,6 +951,7 @@ a {
   .bv-content {
     grid-template-columns: 1fr;
     gap: 8px;
+    overflow: visible;
   }
 
   .bv-panel,
@@ -975,6 +983,15 @@ a {
     grid-template-columns: repeat(3, 1fr);
     gap: 4px;
     font-size: 10.8px;
+  }
+
+  .bv-exec {
+    display: grid;
+    grid-template-rows: auto;
+  }
+
+  .bv-summary {
+    height: 44px;
   }
 
   .bv-state h3 {
