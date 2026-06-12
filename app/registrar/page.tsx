@@ -7,7 +7,8 @@ export default function RegistrarPage() {
         <h1 style={styles.title}>Registrar Censo</h1>
 
         <p style={styles.description}>
-          Registre un nuevo censo de monitoreo ambiental utilizando el formulario oficial de BIOVITAL.
+          Acceda al registro oficial de censos o actualice el estado de avance de censos,
+          informes, revisión ITO y carga en BIOVITAL.
         </p>
 
         <a
@@ -16,6 +17,16 @@ export default function RegistrarPage() {
         >
           <ClipboardIcon />
           Registrar Censo
+        </a>
+
+        <a
+          href="PEGA_AQUI_URL_PUBLICA_DEL_FORMULARIO_ESTADO_CENSOS"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={styles.secondaryActionButton}
+        >
+          <TrafficIcon />
+          Actualizar Estado de Censos
         </a>
 
         <a href="/" style={styles.secondaryButton}>
@@ -33,20 +44,25 @@ export default function RegistrarPage() {
 
 function ClipboardIcon() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      width="22"
-      height="22"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
       <path d="M9 4h6l1 2h3v15H5V6h3l1-2Z" />
       <path d="M9 11h6" />
       <path d="M12 8v6" />
       <path d="M9 14h6" />
+    </svg>
+  );
+}
+
+function TrafficIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2v3" />
+      <path d="M12 19v3" />
+      <path d="M4.9 4.9l2.1 2.1" />
+      <path d="M17 17l2.1 2.1" />
+      <path d="M2 12h3" />
+      <path d="M19 12h3" />
+      <circle cx="12" cy="12" r="4" />
     </svg>
   );
 }
@@ -61,7 +77,6 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '24px',
     fontFamily: 'Inter, Arial, sans-serif',
   },
-
   card: {
     width: '100%',
     maxWidth: '420px',
@@ -72,28 +87,24 @@ const styles: Record<string, React.CSSProperties> = {
     textAlign: 'center',
     border: '1px solid #e1eadf',
   },
-
   logo: {
     width: '118px',
     height: '118px',
     objectFit: 'contain',
     marginBottom: '10px',
   },
-
   title: {
     margin: '0 0 12px',
     color: '#0b3b28',
     fontSize: '32px',
     fontWeight: 900,
   },
-
   description: {
     color: '#53635a',
     fontSize: '15px',
     lineHeight: 1.5,
     marginBottom: '24px',
   },
-
   primaryButton: {
     display: 'flex',
     width: '100%',
@@ -104,13 +115,28 @@ const styles: Record<string, React.CSSProperties> = {
     textDecoration: 'none',
     fontWeight: 900,
     fontSize: '16px',
-    marginBottom: '14px',
+    marginBottom: '12px',
     boxShadow: '0 8px 20px rgba(15,122,60,.18)',
     alignItems: 'center',
     justifyContent: 'center',
     gap: '10px',
   },
-
+  secondaryActionButton: {
+    display: 'flex',
+    width: '100%',
+    minHeight: '56px',
+    borderRadius: '14px',
+    background: '#ffffff',
+    color: '#0f7a3c',
+    textDecoration: 'none',
+    fontWeight: 900,
+    fontSize: '15px',
+    border: '1px solid #cfe8d8',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px',
+    marginBottom: '12px',
+  },
   secondaryButton: {
     display: 'flex',
     width: '100%',
@@ -125,7 +151,6 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   footer: {
     marginTop: '28px',
     display: 'flex',
