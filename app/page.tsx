@@ -215,18 +215,10 @@ export default function Home() {
           </div>
 
           <div className="bv-actions">
-            <a className="bv-button" href="/registrar">
-              <IconPlus /> Registrar Censo
-            </a>
-            <a
-              className="bv-button bv-button-secondary"
-              href={FORM_ESTADO_CENSOS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <IconClipboard /> Actualizar Estado
-            </a>
-          </div>
+  <a className="bv-button" href="/registrar">
+    <IconPlus /> Registrar
+  </a>
+</div>
         </header>
 
         <section className="bv-filters">
