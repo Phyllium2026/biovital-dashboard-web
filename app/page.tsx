@@ -350,10 +350,7 @@ const compromisosGestion = useMemo(() => {
 
             
 
-              <DistRow label="Operativo" value={operativo} total={filtrados.length} />
-              <DistRow label="Seguimiento" value={seguimiento} total={filtrados.length} />
-              <DistRow label="Crítico" value={critico} total={filtrados.length} />
-            </div>
+             
 
             <div className="bv-semaforo">
   <div className="bv-semaforo-head">
