@@ -90,11 +90,18 @@ function esEjecutado(valor?: string) {
 }
 
 function clasificarEtapaGestion(r: SemaforoRegistro) {
-  if (!esEjecutado(r.Estado_Censo)) return 'Censo pendiente';
-  if (!esEjecutado(r.Estado_Informe)) return 'Informe pendiente';
-  if (!esEjecutado(r.Revision_ITO)) return 'Revisión ITO pendiente';
-  if (!esEjecutado(r.Carga_BioVital)) return 'Carga BIOVITAL pendiente';
-  return 'Completados';
+  const estados = [
+    r.Estado_Censo,
+    r.Estado_Informe,
+    r.Revision_ITO,
+    r.Carga_BioVital,
+  ].map((v) => String(v || '').toLowerCase());
+
+  if (estados.every((v) => v.includes('ejecutado'))) return 'Completados';
+  if (estados.some((v) => v.includes('ejecución') || v.includes('elaboración'))) return 'En ejecución';
+  if (estados.some((v) => v.includes('pendiente'))) return 'Pendientes';
+
+  return 'Pendientes';
 }
 export default function Home() {
   const [anio, setAnio] = useState('Todos');
