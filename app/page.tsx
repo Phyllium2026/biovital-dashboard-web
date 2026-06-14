@@ -88,9 +88,9 @@ function clasificarEstado(avance: number) {
 
 export default function Home() {
   const [anio, setAnio] = useState('Todos');
-  const [predio, setPredio] = useState('Todos');
-  const [compromiso, setCompromiso] = useState('Todos');
-  const [eecc, setEecc] = useState('Todos');
+const [predio, setPredio] = useState('Todos');
+const [eecc, setEecc] = useState('Todos');
+const [etapa, setEtapa] = useState('Todos');
   const [registros, setRegistros] = useState<Registro[]>([]);
   const [kpis, setKpis] = useState<Kpis>({});
   const [semaforo, setSemaforo] = useState<SemaforoData>({
@@ -153,14 +153,22 @@ export default function Home() {
   ];
 
   const filtrados = useMemo(() => {
-    return registros.filter(
-      (r) =>
-        (anio === 'Todos' || r.anio === anio) &&
-        (predio === 'Todos' || r.predio === predio) &&
-        (compromiso === 'Todos' || r.compromiso === compromiso) &&
-        (eecc === 'Todos' || r.eecc === eecc)
+  return registros.filter((r) => {
+    const etapaRegistro =
+      r.estado === 'Operativo'
+        ? 'Completados'
+        : r.estado === 'Seguimiento'
+        ? 'En proceso'
+        : 'Requieren gestión';
+
+    return (
+      (anio === 'Todos' || r.anio === anio) &&
+      (predio === 'Todos' || r.predio === predio) &&
+      (eecc === 'Todos' || r.eecc === eecc) &&
+      (etapa === 'Todos' || etapaRegistro === etapa)
     );
-  }, [registros, anio, predio, compromiso, eecc]);
+  });
+}, [registros, anio, predio, eecc, etapa]);
 
   const totalCensos = filtrados.length;
   const totalVivos = filtrados.reduce((a, b) => a + b.vivos, 0);
