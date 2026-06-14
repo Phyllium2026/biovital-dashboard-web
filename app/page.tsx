@@ -245,7 +245,14 @@ const [etapa, setEtapa] = useState('Todos');
           <Select
   label="Etapa"
   value={etapa}
-  options={['Todos', 'Completados', 'En proceso', 'Requieren gestión']}
+  options={[
+  'Todos',
+  'Censo pendiente',
+  'Informe pendiente',
+  'Revisión ITO pendiente',
+  'Carga BIOVITAL pendiente',
+  'Completados',
+]}
   onChange={setEtapa}
   icon={<IconClipboard />}
 />
