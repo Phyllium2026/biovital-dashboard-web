@@ -232,7 +232,13 @@ const [etapa, setEtapa] = useState('Todos');
         <section className="bv-filters">
           <Select label="Año" value={anio} options={unique('anio')} onChange={setAnio} icon={<IconCalendar />} />
           <Select label="Predio" value={predio} options={unique('predio')} onChange={setPredio} icon={<IconPin />} />
-          <Select label="Compromiso" value={compromiso} options={unique('compromiso')} onChange={setCompromiso} icon={<IconClipboard />} />
+          <Select
+  label="Etapa"
+  value={etapa}
+  options={['Todos', 'Completados', 'En proceso', 'Requieren gestión']}
+  onChange={setEtapa}
+  icon={<IconClipboard />}
+/>
           <Select label="EECC" value={eecc} options={unique('eecc')} onChange={setEecc} icon={<IconBuilding />} />
         </section>
 
