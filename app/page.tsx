@@ -473,6 +473,22 @@ function DistRow({ label, value, total }: { label: string; value: number; total:
     </div>
   );
 }
+function EstadoBadge({ value }: { value?: string }) {
+  const estado = String(value || 'Pendiente');
+
+  const className = esEjecutado(estado)
+    ? 'ok'
+    : estado.toLowerCase().includes('ejecución') ||
+      estado.toLowerCase().includes('elaboración')
+    ? 'medio'
+    : 'pendiente';
+
+  return (
+    <span className={`bv-badge-estado ${className}`}>
+      {esEjecutado(estado) ? 'OK' : estado}
+    </span>
+  );
+}
 function Svg({ children }: { children: ReactNode }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round">
