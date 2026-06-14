@@ -1370,4 +1370,60 @@ a {
 
 
 }
+.bv-gestion-table {
+  display: grid;
+  gap: 3px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.bv-gestion-row {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr .72fr .82fr .62fr .82fr;
+  gap: 4px;
+  align-items: center;
+  font-size: 8.4px;
+  padding: 3px 4px;
+  border-radius: 8px;
+  background: #f8fbf7;
+  border: 1px solid #e1eadf;
+}
+
+.bv-gestion-header {
+  background: #eef7ef;
+  color: #0b3b28;
+  font-weight: 900;
+}
+
+.bv-gestion-strong {
+  font-weight: 900;
+  color: #0f7a3c;
+}
+
+.bv-badge-estado {
+  min-width: 0;
+  border-radius: 999px;
+  padding: 2px 4px;
+  font-size: 7.8px;
+  font-weight: 900;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bv-badge-estado.ok {
+  background: #dff7e8;
+  color: #08713a;
+}
+
+.bv-badge-estado.medio {
+  background: #fff3d8;
+  color: #9a5b00;
+}
+
+.bv-badge-estado.pendiente {
+  background: #fde8df;
+  color: #b13a0b;
+}
 `;
