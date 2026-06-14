@@ -348,20 +348,7 @@ const compromisosGestion = useMemo(() => {
             <Resumen label="Plantas a reponer" value={formato(kpis.Total_Reponer || totalMuertos)} icon={<IconDown />} danger />
             <Resumen label="Prendimiento promedio" value={pct(kpis.Prendimiento_Promedio || avance)} icon={<IconProgress />} />
 
-            <div className="bv-state">
-              <div>
-                <small>Estado general</small>
-                <h3>{estadoGeneral}</h3>
-                <p><b>{avance}%</b> de prendimiento promedio filtrado.</p>
-              </div>
-              <div className="bv-state-icon"><IconLeaf /></div>
-            </div>
-
-            <div className="bv-distribution">
-              <div className="bv-dist-head">
-                <strong>Distribución operacional</strong>
-                <span>{filtrados.length} registros</span>
-              </div>
+            
 
               <DistRow label="Operativo" value={operativo} total={filtrados.length} />
               <DistRow label="Seguimiento" value={seguimiento} total={filtrados.length} />
