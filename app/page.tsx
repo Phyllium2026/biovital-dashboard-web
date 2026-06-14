@@ -85,7 +85,17 @@ function clasificarEstado(avance: number) {
   if (avance >= 50) return 'Seguimiento';
   return 'Crítico';
 }
+function esEjecutado(valor?: string) {
+  return String(valor || '').toLowerCase().includes('ejecutado');
+}
 
+function clasificarEtapaGestion(r: SemaforoRegistro) {
+  if (!esEjecutado(r.Estado_Censo)) return 'Censo pendiente';
+  if (!esEjecutado(r.Estado_Informe)) return 'Informe pendiente';
+  if (!esEjecutado(r.Revision_ITO)) return 'Revisión ITO pendiente';
+  if (!esEjecutado(r.Carga_BioVital)) return 'Carga BIOVITAL pendiente';
+  return 'Completados';
+}
 export default function Home() {
   const [anio, setAnio] = useState('Todos');
 const [predio, setPredio] = useState('Todos');
