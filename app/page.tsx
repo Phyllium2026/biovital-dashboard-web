@@ -363,38 +363,36 @@ const compromisosGestion = useMemo(() => {
             </div>
 
             <div className="bv-semaforo">
-              <div className="bv-semaforo-head">
-                <strong><IconTraffic /> Semáforo actualización censos</strong>
-                <span>{resumenSemaforo.total} compromisos</span>
-              </div>
+  <div className="bv-semaforo-head">
+    <strong><IconClipboard /> Estado de compromisos</strong>
+    <span>{compromisosGestion.length} registros</span>
+  </div>
 
-              <div className="bv-semaforo-grid">
-                <div className="critico"><small>Críticos</small><b>{resumenSemaforo.critico}</b></div>
-                <div className="medio"><small>Seguimiento</small><b>{resumenSemaforo.medio}</b></div>
-                <div className="bajo"><small>Controlados</small><b>{resumenSemaforo.bajo}</b></div>
-              </div>
+  <div className="bv-gestion-table">
+    <div className="bv-gestion-row bv-gestion-header">
+      <span>Contrato</span>
+      <span>Predio</span>
+      <span>Censo</span>
+      <span>Informe</span>
+      <span>ITO</span>
+      <span>BioVital</span>
+    </div>
 
-              <div className={`bv-gestion ${estadoGestionClass}`}>
-                <small>Estado gestión</small>
-                <strong>{estadoGestion}</strong>
-              </div>
-
-              <div className="bv-critical-list">
-                {criticosVista.length > 0 ? (
-                  criticosVista.map((r) => (
-                    <div key={`${r.Contrato_Compromiso}-${r.Predio}-${r.Fecha}`}>
-                      <span>{r.Contrato_Compromiso}</span>
-                      <small>{r.Predio} · {r.Carga_BioVital}</small>
-                    </div>
-                  ))
-                ) : (
-                  <div>
-                    <span>Sin críticos</span>
-                    <small>Compromisos controlados</small>
-                  </div>
-                )}
-              </div>
-            </div>
+    {compromisosGestion.slice(0, 5).map((r) => (
+      <div
+        className="bv-gestion-row"
+        key={`${r.Contrato_Compromiso}-${r.Predio}-${r.Fecha}`}
+      >
+        <span className="bv-gestion-strong">{r.Contrato_Compromiso}</span>
+        <span>{r.Predio}</span>
+        <EstadoBadge value={r.Estado_Censo} />
+        <EstadoBadge value={r.Estado_Informe} />
+        <EstadoBadge value={r.Revision_ITO} />
+        <EstadoBadge value={r.Carga_BioVital} />
+      </div>
+    ))}
+  </div>
+</div>
           </aside>
         </section>
 
