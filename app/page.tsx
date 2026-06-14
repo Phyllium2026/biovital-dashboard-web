@@ -270,10 +270,9 @@ const compromisosGestion = useMemo(() => {
   value={etapa}
   options={[
   'Todos',
-  'Censo pendiente',
-  'Informe pendiente',
-  'Revisión ITO pendiente',
-  'Carga BIOVITAL pendiente',
+  'Pendientes',
+  'En ejecución',
+  'Ejecutados',
   'Completados',
 ]}
   onChange={setEtapa}
