@@ -175,7 +175,7 @@ const [etapa, setEtapa] = useState('Todos');
       (anio === 'Todos' || r.anio === anio) &&
       (predio === 'Todos' || r.predio === predio) &&
       (eecc === 'Todos' || r.eecc === eecc) &&
-      (etapa === 'Todos' || etapaRegistro === etapa)
+      true
     );
   });
 }, [registros, anio, predio, eecc, etapa]);
