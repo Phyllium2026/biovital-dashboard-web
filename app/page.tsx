@@ -1033,7 +1033,7 @@ const css = `
 }
 
 .bv-semaforo {
-  height: 96px;
+  height: 100%;
   min-height: 0;
   background: white;
   border: 1px solid #e1eadf;
