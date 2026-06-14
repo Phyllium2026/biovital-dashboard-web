@@ -106,6 +106,7 @@ function clasificarEtapaGestion(r: SemaforoRegistro) {
 export default function Home() {
   const [anio, setAnio] = useState('Todos');
 const [predio, setPredio] = useState('Todos');
+  const [compromiso, setCompromiso] = useState('Todos');
 const [eecc, setEecc] = useState('Todos');
 const [etapa, setEtapa] = useState('Todos');
   const [registros, setRegistros] = useState<Registro[]>([]);
