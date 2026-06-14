@@ -273,16 +273,10 @@ const compromisosGestion = useMemo(() => {
           <Select label="Año" value={anio} options={unique('anio')} onChange={setAnio} icon={<IconCalendar />} />
           <Select label="Predio" value={predio} options={unique('predio')} onChange={setPredio} icon={<IconPin />} />
           <Select
-  label="Etapa"
-  value={etapa}
-  options={[
-  'Todos',
-  'Pendientes',
-  'En ejecución',
-  'Ejecutados',
-  'Completados',
-]}
-  onChange={setEtapa}
+  label="Contrato"
+  value={compromiso}
+  options={unique('compromiso')}
+  onChange={setCompromiso}
   icon={<IconClipboard />}
 />
           <Select label="EECC" value={eecc} options={unique('eecc')} onChange={setEecc} icon={<IconBuilding />} />
