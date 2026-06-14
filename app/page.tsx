@@ -196,7 +196,30 @@ const [etapa, setEtapa] = useState('Todos');
     avance >= 75 ? 'CONTROLADO' : avance >= 50 ? 'EN SEGUIMIENTO' : 'CRÍTICO';
 
   const registrosVista = filtrados.slice(0, 6);
+const compromisosGestion = useMemo(() => {
+  return semaforo.registros
+    .map((r) => ({
+      ...r,
+      etapa: clasificarEtapaGestion(r),
+    }))
+    .filter(
+      (r) =>
+        (predio === 'Todos' || r.Predio === predio) &&
+        (eecc === 'Todos' || r.Contrato_Compromiso === eecc) &&
+        (etapa === 'Todos' || r.etapa === etapa)
+    )
+    .sort((a, b) => {
+      const prioridad: Record<string, number> = {
+        'Carga BIOVITAL pendiente': 1,
+        'Revisión ITO pendiente': 2,
+        'Informe pendiente': 3,
+        'Censo pendiente': 4,
+        Completados: 5,
+      };
 
+      return prioridad[a.etapa] - prioridad[b.etapa];
+    });
+}, [semaforo.registros, predio, eecc, etapa]);
   const resumenSemaforo = semaforo.resumen;
   const estadoGestion =
     resumenSemaforo.critico > 0
