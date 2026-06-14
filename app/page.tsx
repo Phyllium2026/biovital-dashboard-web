@@ -886,7 +886,7 @@ const css = `
   height: 100%;
   background: linear-gradient(145deg, #f8fff8, #edf7ed);
   display: grid;
-  grid-template-rows: 24px repeat(4, 34px) 56px 72px 96px;
+  grid-template-rows: 24px repeat(4, 34px) minmax(0, 1fr);
   gap: 4px;
   align-self: stretch;
   overflow: hidden;
