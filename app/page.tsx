@@ -109,7 +109,10 @@ export default function Home() {
   const [predio, setPredio] = useState('Todos');
   const [eecc, setEecc] = useState('Todos');
   const [especie, setEspecie] = useState('Todos');
-  const [etapa] = useState('Todos');
+
+  const [gestionPredio, setGestionPredio] = useState('Todos');
+  const [gestionContrato, setGestionContrato] = useState('Todos');
+  const [gestionResponsable, setGestionResponsable] = useState('Todos');
 
   const [registros, setRegistros] = useState<Registro[]>([]);
   const [kpis, setKpis] = useState<Kpis>({});
@@ -174,6 +177,11 @@ export default function Home() {
     ...Array.from(new Set(registros.map((r) => String(r[key])).filter(Boolean))),
   ];
 
+  const uniqueSemaforo = (key: keyof SemaforoRegistro) => [
+    'Todos',
+    ...Array.from(new Set(semaforo.registros.map((r) => String(r[key] || '')).filter(Boolean))),
+  ];
+
   const filtrados = useMemo(() => {
     return registros.filter((r) => {
       return (
@@ -203,11 +211,28 @@ export default function Home() {
       }))
       .filter(
         (r) =>
-          (predio === 'Todos' || r.Predio === predio) &&
-          (eecc === 'Todos' || r.Contrato_Compromiso === eecc) &&
-          (etapa === 'Todos' || r.etapa === etapa)
-      );
-  }, [semaforo.registros, predio, eecc, etapa]);
+          (gestionPredio === 'Todos' || r.Predio === gestionPredio) &&
+          (gestionContrato === 'Todos' || r.Contrato_Compromiso === gestionContrato) &&
+          (gestionResponsable === 'Todos' || String(r.Responsable || '') === gestionResponsable)
+      )
+      .sort((a, b) => {
+        const prioridad: Record<string, number> = {
+          Pendientes: 1,
+          'En ejecución': 2,
+          Completados: 3,
+        };
+
+        return (prioridad[a.etapa] || 9) - (prioridad[b.etapa] || 9);
+      });
+  }, [semaforo.registros, gestionPredio, gestionContrato, gestionResponsable]);
+
+  const gestionPendientes = compromisosGestion.filter((r) => r.etapa === 'Pendientes').length;
+  const gestionEjecucion = compromisosGestion.filter((r) => r.etapa === 'En ejecución').length;
+  const gestionCompletados = compromisosGestion.filter((r) => r.etapa === 'Completados').length;
+  const gestionCriticos = compromisosGestion.filter((r) =>
+    String(r.Semaforo || '').toLowerCase().includes('crítico') ||
+    String(r.Semaforo || '').toLowerCase().includes('critico')
+  ).length;
 
   return (
     <main className="bv-main">
@@ -290,18 +315,44 @@ export default function Home() {
 
           <aside className="bv-exec">
             <div className="bv-panel-head exec-head">
-              <h2><IconChart /> Vista ejecutiva</h2>
-              <span>Resumen consolidado</span>
+              <h2><IconClipboard /> Estado de Ejecución del Censo</h2>
+              <span>Gestión del proceso</span>
             </div>
 
-            <Resumen label="Registros monitoreados" value={formato(totalCensos)} icon={<IconUsers />} />
-            <Resumen label="Plantas vivas" value={formato(totalVivos)} icon={<IconLeaf />} />
-            <Resumen label="Plantas a reponer" value={formato(totalMuertos)} icon={<IconDown />} danger />
-            <Resumen label="Prendimiento promedio" value={pct(avance)} icon={<IconProgress />} />
+            <section className="bv-gestion-filters">
+              <Select
+                label="Predio"
+                value={gestionPredio}
+                options={uniqueSemaforo('Predio')}
+                onChange={setGestionPredio}
+                icon={<IconPin />}
+              />
+              <Select
+                label="Contrato"
+                value={gestionContrato}
+                options={uniqueSemaforo('Contrato_Compromiso')}
+                onChange={setGestionContrato}
+                icon={<IconClipboard />}
+              />
+              <Select
+                label="Responsable"
+                value={gestionResponsable}
+                options={uniqueSemaforo('Responsable')}
+                onChange={setGestionResponsable}
+                icon={<IconUsers />}
+              />
+            </section>
+
+            <section className="bv-gestion-kpis">
+              <MiniKpi label="Pendientes" value={gestionPendientes} icon={<IconClock />} danger />
+              <MiniKpi label="En ejecución" value={gestionEjecucion} icon={<IconProgress />} />
+              <MiniKpi label="Completados" value={gestionCompletados} icon={<IconCheck />} />
+              <MiniKpi label="Críticos" value={gestionCriticos} icon={<IconDown />} danger />
+            </section>
 
             <div className="bv-semaforo">
               <div className="bv-semaforo-head">
-                <strong><IconClipboard /> Estado de compromisos</strong>
+                <strong><IconClipboard /> Tabla de gestión</strong>
                 <span>{compromisosGestion.length} registros</span>
               </div>
 
@@ -313,9 +364,10 @@ export default function Home() {
                   <span>Informe</span>
                   <span>ITO</span>
                   <span>BioVital</span>
+                  <span>Obs.</span>
                 </div>
 
-                {compromisosGestion.slice(0, 5).map((r) => (
+                {compromisosGestion.slice(0, 6).map((r) => (
                   <div className="bv-gestion-row" key={`${r.Contrato_Compromiso}-${r.Predio}-${r.Fecha}`}>
                     <span className="bv-gestion-strong">{r.Contrato_Compromiso}</span>
                     <span>{r.Predio}</span>
@@ -323,6 +375,7 @@ export default function Home() {
                     <EstadoBadge value={r.Estado_Informe} />
                     <EstadoBadge value={r.Revision_ITO} />
                     <EstadoBadge value={r.Carga_BioVital} />
+                    <span className="bv-obs">{r.Observacion_Clave || 'Sin obs.'}</span>
                   </div>
                 ))}
               </div>
@@ -390,6 +443,21 @@ function Resumen({ label, value, icon, danger }: {
       <span className="bv-iconbox">{icon}</span>
       <p>{label}</p>
       <strong className={danger ? 'danger' : ''}>{value}</strong>
+    </div>
+  );
+}
+
+function MiniKpi({ label, value, icon, danger }: {
+  label: string;
+  value: number;
+  icon: ReactNode;
+  danger?: boolean;
+}) {
+  return (
+    <div className="bv-mini-kpi">
+      <span className="bv-iconbox">{icon}</span>
+      <small>{label}</small>
+      <strong className={danger ? 'danger' : ''}>{formato(value)}</strong>
     </div>
   );
 }
@@ -808,8 +876,8 @@ const css = `
   height: 100%;
   background: linear-gradient(145deg, #f8fff8, #edf7ed);
   display: grid;
-  grid-template-rows: 24px repeat(4, 34px) minmax(0, 1fr);
-  gap: 4px;
+  grid-template-rows: 24px 46px 52px minmax(0, 1fr);
+  gap: 5px;
   align-self: stretch;
   overflow: hidden;
 }
@@ -890,6 +958,90 @@ const css = `
   color: #68766d;
 }
 
+.bv-gestion-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 5px;
+  min-height: 0;
+}
+
+.bv-gestion-filters .bv-filter {
+  height: 46px;
+  padding: 5px 7px;
+}
+
+.bv-gestion-filters .bv-filter-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+}
+
+.bv-gestion-filters .bv-filter-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.bv-gestion-filters .bv-filter small {
+  font-size: 8.5px;
+}
+
+.bv-gestion-filters .bv-filter select {
+  font-size: 10.5px;
+}
+
+.bv-gestion-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  min-height: 0;
+}
+
+.bv-mini-kpi {
+  height: 52px;
+  background: white;
+  border: 1px solid #e1eadf;
+  border-radius: 13px;
+  padding: 5px 6px;
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  grid-template-rows: 18px 20px;
+  gap: 1px 5px;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,.035);
+}
+
+.bv-mini-kpi .bv-iconbox {
+  grid-row: 1 / span 2;
+  width: 25px;
+  height: 25px;
+  border-radius: 10px;
+}
+
+.bv-mini-kpi .bv-iconbox svg {
+  width: 16px;
+  height: 16px;
+}
+
+.bv-mini-kpi small {
+  color: #53635a;
+  font-weight: 900;
+  font-size: 8.5px;
+  white-space: nowrap;
+}
+
+.bv-mini-kpi strong {
+  color: #0f7a3c;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.bv-obs {
+  color: #53635a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .bv-footer {
   display: grid;
   grid-template-columns: repeat(4, 1fr) 1.5fr;
@@ -946,7 +1098,7 @@ a {
 
 .bv-gestion-row {
   display: grid;
-  grid-template-columns: 1.05fr 1fr .72fr .82fr .62fr .82fr;
+  grid-template-columns: .82fr .9fr .62fr .72fr .54fr .72fr 1fr;
   gap: 4px;
   align-items: center;
   font-size: 8.4px;
@@ -1131,6 +1283,28 @@ a {
     height: auto;
     min-height: 128px;
     margin-top: 0;
+  }
+
+  .bv-gestion-filters {
+    grid-template-columns: 1fr;
+    margin-bottom: 6px;
+  }
+
+  .bv-gestion-kpis {
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: 6px;
+  }
+
+  .bv-mini-kpi {
+    height: 48px;
+  }
+
+  .bv-gestion-table {
+    overflow-x: auto;
+  }
+
+  .bv-gestion-row {
+    min-width: 680px;
   }
 }
 `;
