@@ -6,7 +6,6 @@ import type { ReactNode } from 'react';
 const API_URL =
   'https://script.google.com/macros/s/AKfycbzQLbAOH-fVOQqQFiKg-kU9r7bf5sv0V8GSzDo4UAiD4d0dP3_l0rxPhK5_4BKregA/exec';
 
-
 type RegistroApi = {
   ID_BIOVITAL: string;
   Anio: number | string;
@@ -85,6 +84,7 @@ function clasificarEstado(avance: number) {
   if (avance >= 50) return 'Seguimiento';
   return 'Crítico';
 }
+
 function esEjecutado(valor?: string) {
   return String(valor || '').toLowerCase().includes('ejecutado');
 }
@@ -103,12 +103,14 @@ function clasificarEtapaGestion(r: SemaforoRegistro) {
 
   return 'Pendientes';
 }
+
 export default function Home() {
   const [anio, setAnio] = useState('Todos');
-const [predio, setPredio] = useState('Todos');
-  const [compromiso, setCompromiso] = useState('Todos');
-const [eecc, setEecc] = useState('Todos');
-const [etapa, setEtapa] = useState('Todos');
+  const [predio, setPredio] = useState('Todos');
+  const [eecc, setEecc] = useState('Todos');
+  const [especie, setEspecie] = useState('Todos');
+  const [etapa] = useState('Todos');
+
   const [registros, setRegistros] = useState<Registro[]>([]);
   const [kpis, setKpis] = useState<Kpis>({});
   const [semaforo, setSemaforo] = useState<SemaforoData>({
@@ -131,10 +133,12 @@ const [etapa, setEtapa] = useState('Todos');
         const semJson = await semRes.json();
 
         setKpis(kpiJson.data || {});
-        setSemaforo(semJson.data || {
-          resumen: { total: 0, critico: 0, medio: 0, bajo: 0 },
-          registros: [],
-        });
+        setSemaforo(
+          semJson.data || {
+            resumen: { total: 0, critico: 0, medio: 0, bajo: 0 },
+            registros: [],
+          }
+        );
 
         const normalizados: Registro[] = (regJson.data || []).map((r: RegistroApi) => {
           const avance = Math.max(0, Math.min(100, Number(r.Prendimiento_Porc || 0)));
@@ -171,22 +175,15 @@ const [etapa, setEtapa] = useState('Todos');
   ];
 
   const filtrados = useMemo(() => {
-  return registros.filter((r) => {
-    const etapaRegistro =
-      r.estado === 'Operativo'
-        ? 'Completados'
-        : r.estado === 'Seguimiento'
-        ? 'En proceso'
-        : 'Requieren gestión';
-
-    return (
-      (anio === 'Todos' || r.anio === anio) &&
-      (predio === 'Todos' || r.predio === predio) &&
-      (eecc === 'Todos' || r.eecc === eecc) &&
-      true
-    );
-  });
-}, [registros, anio, predio, eecc, etapa]);
+    return registros.filter((r) => {
+      return (
+        (anio === 'Todos' || r.anio === anio) &&
+        (predio === 'Todos' || r.predio === predio) &&
+        (eecc === 'Todos' || r.eecc === eecc) &&
+        (especie === 'Todos' || r.especie === especie)
+      );
+    });
+  }, [registros, anio, predio, eecc, especie]);
 
   const totalCensos = filtrados.length;
   const totalVivos = filtrados.reduce((a, b) => a + b.vivos, 0);
@@ -196,56 +193,21 @@ const [etapa, setEtapa] = useState('Todos');
       ? Math.round(filtrados.reduce((a, b) => a + b.avance, 0) / filtrados.length)
       : 0;
 
-  const operativo = filtrados.filter((r) => r.estado === 'Operativo').length;
-  const seguimiento = filtrados.filter((r) => r.estado === 'Seguimiento').length;
-  const critico = filtrados.filter((r) => r.estado === 'Crítico').length;
-
-  const estadoGeneral =
-    avance >= 75 ? 'CONTROLADO' : avance >= 50 ? 'EN SEGUIMIENTO' : 'CRÍTICO';
-
   const registrosVista = filtrados.slice(0, 6);
-const compromisosGestion = useMemo(() => {
-  return semaforo.registros
-    .map((r) => ({
-      ...r,
-      etapa: clasificarEtapaGestion(r),
-    }))
-    .filter(
-      (r) =>
-        (predio === 'Todos' || r.Predio === predio) &&
-        (eecc === 'Todos' || r.Contrato_Compromiso === eecc) &&
-        (etapa === 'Todos' || r.etapa === etapa)
-    )
-    .sort((a, b) => {
-      const prioridad: Record<string, number> = {
-        'Carga BIOVITAL pendiente': 1,
-        'Revisión ITO pendiente': 2,
-        'Informe pendiente': 3,
-        'Censo pendiente': 4,
-        Completados: 5,
-      };
 
-      return prioridad[a.etapa] - prioridad[b.etapa];
-    });
-}, [semaforo.registros, predio, eecc, etapa]);
-  const resumenSemaforo = semaforo.resumen;
-  const estadoGestion =
-    resumenSemaforo.critico > 0
-      ? 'REQUIERE GESTIÓN INMEDIATA'
-      : resumenSemaforo.medio > 0
-      ? 'EN SEGUIMIENTO'
-      : 'CONTROLADO';
-
-  const estadoGestionClass =
-    resumenSemaforo.critico > 0
-      ? 'critico'
-      : resumenSemaforo.medio > 0
-      ? 'medio'
-      : 'bajo';
-
-  const criticosVista = semaforo.registros
-    .filter((r) => r.Semaforo.includes('Crítico'))
-    .slice(0, 5);
+  const compromisosGestion = useMemo(() => {
+    return semaforo.registros
+      .map((r) => ({
+        ...r,
+        etapa: clasificarEtapaGestion(r),
+      }))
+      .filter(
+        (r) =>
+          (predio === 'Todos' || r.Predio === predio) &&
+          (eecc === 'Todos' || r.Contrato_Compromiso === eecc) &&
+          (etapa === 'Todos' || r.etapa === etapa)
+      );
+  }, [semaforo.registros, predio, eecc, etapa]);
 
   return (
     <main className="bv-main">
@@ -264,38 +226,32 @@ const compromisosGestion = useMemo(() => {
           </div>
 
           <div className="bv-actions">
-  <a className="bv-button" href="/registrar">
-    <IconPlus /> Registrar
-  </a>
-</div>
+            <a className="bv-button" href="/registrar">
+              <IconPlus /> Registrar
+            </a>
+          </div>
         </header>
 
         <section className="bv-filters">
           <Select label="Año" value={anio} options={unique('anio')} onChange={setAnio} icon={<IconCalendar />} />
           <Select label="Predio" value={predio} options={unique('predio')} onChange={setPredio} icon={<IconPin />} />
-          <Select
-  label="Contrato"
-  value={compromiso}
-  options={unique('compromiso')}
-  onChange={setCompromiso}
-  icon={<IconClipboard />}
-/>
           <Select label="EECC" value={eecc} options={unique('eecc')} onChange={setEecc} icon={<IconBuilding />} />
+          <Select label="Especie" value={especie} options={unique('especie')} onChange={setEspecie} icon={<IconLeaf />} />
         </section>
 
         <section className="bv-kpis">
-          <Kpi icon={<IconFile />} title="Registros" value={loading ? '...' : formato(kpis.Total_Registros || totalCensos)} />
-          <Kpi icon={<IconLeaf />} title="Vivas" value={loading ? '...' : formato(kpis.Total_Vivas || totalVivos)} />
-          <Kpi icon={<IconDown />} title="Reponer" value={loading ? '...' : formato(kpis.Total_Reponer || totalMuertos)} danger />
-          <Kpi icon={<IconProgress />} title="Prendimiento" value={loading ? '...' : pct(kpis.Prendimiento_Promedio || avance)} />
-          <Kpi icon={<IconMountain />} title="Predios" value={loading ? '...' : formato(kpis.Total_Predios || 0)} />
-          <Kpi icon={<IconShield />} title="Compromisos" value={loading ? '...' : formato(kpis.Total_Contratos || 0)} />
+          <Kpi icon={<IconFile />} title="Registros" value={loading ? '...' : formato(totalCensos)} />
+          <Kpi icon={<IconLeaf />} title="Vivas" value={loading ? '...' : formato(totalVivos)} />
+          <Kpi icon={<IconDown />} title="Reponer" value={loading ? '...' : formato(totalMuertos)} danger />
+          <Kpi icon={<IconProgress />} title="Prendimiento" value={loading ? '...' : pct(avance)} />
+          <Kpi icon={<IconMountain />} title="Predios" value={loading ? '...' : formato(new Set(filtrados.map((r) => r.predio)).size)} />
+          <Kpi icon={<IconShield />} title="Compromisos" value={loading ? '...' : formato(new Set(filtrados.map((r) => r.compromiso)).size)} />
         </section>
 
         <section className="bv-content">
           <div className="bv-panel">
             <div className="bv-panel-head">
-              <h2><IconList /> Vista operacional</h2>
+              <h2><IconList /> Resultados del Censo</h2>
               <span>{filtrados.length} registros</span>
             </div>
 
@@ -309,7 +265,7 @@ const compromisosGestion = useMemo(() => {
                       <div>
                         <div className="bv-id">{r.id}</div>
                         <h3>{r.especie}</h3>
-                        <p>{r.predio} · {r.compromiso} · {r.eecc}</p>
+                        <p>{r.predio} · {r.eecc} · {r.compromiso}</p>
                       </div>
                       <span className={`bv-status ${r.estado.toLowerCase()}`}>{r.estado}</span>
                     </div>
@@ -322,7 +278,7 @@ const compromisosGestion = useMemo(() => {
                     </div>
 
                     <div className="bv-card-stats">
-                      <span><IconLeafSmall /> Vivos: <b>{formato(r.vivos)}</b></span>
+                      <span><IconLeafSmall /> Vivas: <b>{formato(r.vivos)}</b></span>
                       <span className="danger"><IconDownSmall /> Reponer: <b>{formato(r.muertos)}</b></span>
                       <span><IconClockSmall /> Censos: <b>{formato(r.censos)}</b></span>
                     </div>
@@ -338,46 +294,39 @@ const compromisosGestion = useMemo(() => {
               <span>Resumen consolidado</span>
             </div>
 
-            <Resumen label="Registros monitoreados" value={formato(kpis.Total_Registros || totalCensos)} icon={<IconUsers />} />
-            <Resumen label="Plantas vivas" value={formato(kpis.Total_Vivas || totalVivos)} icon={<IconLeaf />} />
-            <Resumen label="Plantas a reponer" value={formato(kpis.Total_Reponer || totalMuertos)} icon={<IconDown />} danger />
-            <Resumen label="Prendimiento promedio" value={pct(kpis.Prendimiento_Promedio || avance)} icon={<IconProgress />} />
-
-            
-
-             
+            <Resumen label="Registros monitoreados" value={formato(totalCensos)} icon={<IconUsers />} />
+            <Resumen label="Plantas vivas" value={formato(totalVivos)} icon={<IconLeaf />} />
+            <Resumen label="Plantas a reponer" value={formato(totalMuertos)} icon={<IconDown />} danger />
+            <Resumen label="Prendimiento promedio" value={pct(avance)} icon={<IconProgress />} />
 
             <div className="bv-semaforo">
-  <div className="bv-semaforo-head">
-    <strong><IconClipboard /> Estado de compromisos</strong>
-    <span>{compromisosGestion.length} registros</span>
-  </div>
+              <div className="bv-semaforo-head">
+                <strong><IconClipboard /> Estado de compromisos</strong>
+                <span>{compromisosGestion.length} registros</span>
+              </div>
 
-  <div className="bv-gestion-table">
-    <div className="bv-gestion-row bv-gestion-header">
-      <span>Contrato</span>
-      <span>Predio</span>
-      <span>Censo</span>
-      <span>Informe</span>
-      <span>ITO</span>
-      <span>BioVital</span>
-    </div>
+              <div className="bv-gestion-table">
+                <div className="bv-gestion-row bv-gestion-header">
+                  <span>Contrato</span>
+                  <span>Predio</span>
+                  <span>Censo</span>
+                  <span>Informe</span>
+                  <span>ITO</span>
+                  <span>BioVital</span>
+                </div>
 
-    {compromisosGestion.slice(0, 5).map((r) => (
-      <div
-        className="bv-gestion-row"
-        key={`${r.Contrato_Compromiso}-${r.Predio}-${r.Fecha}`}
-      >
-        <span className="bv-gestion-strong">{r.Contrato_Compromiso}</span>
-        <span>{r.Predio}</span>
-        <EstadoBadge value={r.Estado_Censo} />
-        <EstadoBadge value={r.Estado_Informe} />
-        <EstadoBadge value={r.Revision_ITO} />
-        <EstadoBadge value={r.Carga_BioVital} />
-      </div>
-    ))}
-  </div>
-</div>
+                {compromisosGestion.slice(0, 5).map((r) => (
+                  <div className="bv-gestion-row" key={`${r.Contrato_Compromiso}-${r.Predio}-${r.Fecha}`}>
+                    <span className="bv-gestion-strong">{r.Contrato_Compromiso}</span>
+                    <span>{r.Predio}</span>
+                    <EstadoBadge value={r.Estado_Censo} />
+                    <EstadoBadge value={r.Estado_Informe} />
+                    <EstadoBadge value={r.Revision_ITO} />
+                    <EstadoBadge value={r.Carga_BioVital} />
+                  </div>
+                ))}
+              </div>
+            </div>
           </aside>
         </section>
 
@@ -388,8 +337,6 @@ const compromisosGestion = useMemo(() => {
           <div><IconCloud /> Accesible <span>Web y móvil</span></div>
           <strong><IconCheck /> Diseñado para decisiones rápidas</strong>
         </footer>
-
-    
       </section>
     </main>
   );
@@ -447,17 +394,6 @@ function Resumen({ label, value, icon, danger }: {
   );
 }
 
-function DistRow({ label, value, total }: { label: string; value: number; total: number }) {
-  const pct = total > 0 ? (value / total) * 100 : 0;
-
-  return (
-    <div className="bv-dist-row">
-      <span>{label}</span>
-      <div><i style={{ width: `${pct}%` }} /></div>
-      <b>{value}</b>
-    </div>
-  );
-}
 function EstadoBadge({ value }: { value?: string }) {
   const estado = String(value || 'Pendiente');
 
@@ -474,6 +410,7 @@ function EstadoBadge({ value }: { value?: string }) {
     </span>
   );
 }
+
 function Svg({ children }: { children: ReactNode }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round">
@@ -495,11 +432,8 @@ function IconMountain() { return <Svg><path d="M3 20h18L14 6l-4 8-2-4Z" /></Svg>
 function IconShield() { return <Svg><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" /><path d="M9 12l2 2 4-5" /></Svg>; }
 function IconList() { return <Svg><path d="M8 6h13M8 12h13M8 18h13" /><path d="M3 6h.01M3 12h.01M3 18h.01" /></Svg>; }
 function IconChart() { return <Svg><path d="M3 3v18h18" /><path d="M7 16l4-5 4 3 5-8" /></Svg>; }
-function IconTraffic() { return <Svg><path d="M12 2v3" /><path d="M12 19v3" /><path d="M4.9 4.9l2.1 2.1" /><path d="M17 17l2.1 2.1" /><path d="M2 12h3" /><path d="M19 12h3" /><circle cx="12" cy="12" r="4" /></Svg>; }
 function IconUsers() { return <Svg><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" /><circle cx="9.5" cy="7" r="4" /><path d="M17 11a4 4 0 0 0 0-8M21 21v-2a4 4 0 0 0-3-3.8" /></Svg>; }
 function IconClock() { return <Svg><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></Svg>; }
-function IconHome() { return <Svg><path d="M3 11l9-8 9 8" /><path d="M5 10v11h14V10" /></Svg>; }
-function IconMore() { return <Svg><path d="M5 12h.01M12 12h.01M19 12h.01" /></Svg>; }
 function IconCloud() { return <Svg><path d="M17.5 19H8a5 5 0 1 1 1.1-9.9A7 7 0 0 1 22 12.5 4.5 4.5 0 0 1 17.5 19Z" /></Svg>; }
 function IconCheck() { return <Svg><path d="M20 6L9 17l-5-5" /></Svg>; }
 function IconLeafSmall() { return <span className="inline-icon"><IconLeaf /></span>; }
@@ -594,13 +528,6 @@ const css = `
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.bv-button-secondary {
-  background: #ffffff;
-  color: #0f7a3c;
-  border: 1px solid #cfe8d8;
-  box-shadow: 0 5px 14px rgba(0,0,0,.05);
 }
 
 .bv-filters {
@@ -821,9 +748,9 @@ const css = `
   color: #125ea8;
 }
 
-.bv-status.planificado {
-  background: #eee4ff;
-  color: #6333a5;
+.bv-status.crítico {
+  background: #fde8df;
+  color: #b13a0b;
 }
 
 .bv-progress-row {
@@ -926,107 +853,6 @@ const css = `
   font-size: 15px;
 }
 
-.bv-state {
-  background: linear-gradient(135deg, #e1f2e4, #f8fff8);
-  border-radius: 14px;
-  padding: 6px 10px;
-  border: 1px solid #dceee2;
-  display: grid;
-  grid-template-columns: 1fr 38px;
-  align-items: center;
-  gap: 7px;
-}
-
-.bv-state small {
-  color: #0f7a3c;
-  font-weight: 900;
-  font-size: 9.8px;
-}
-
-.bv-state h3 {
-  margin: 1px 0 1px;
-  font-size: 15px;
-  color: #0f7a3c;
-  line-height: 1;
-}
-
-.bv-state p {
-  margin: 0;
-  color: #405247;
-  font-size: 9px;
-  line-height: 1.05;
-}
-
-.bv-state-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.72);
-  display: grid;
-  place-items: center;
-  color: #0f7a3c;
-}
-
-.bv-state-icon svg {
-  width: 23px;
-  height: 23px;
-}
-
-.bv-distribution {
-  background: white;
-  border: 1px solid #e1eadf;
-  border-radius: 14px;
-  padding: 6px 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.03);
-  overflow: hidden;
-  flex: 0 0 auto;
-}
-
-.bv-dist-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 3px;
-}
-
-.bv-dist-head strong {
-  font-size: 11.5px;
-  color: #102015;
-}
-
-.bv-dist-head span {
-  font-size: 9.5px;
-  color: #68766d;
-}
-
-.bv-dist-row {
-  display: grid;
-  grid-template-columns: 70px 1fr 15px;
-  align-items: center;
-  gap: 6px;
-  margin-top: 3px;
-  font-size: 9.4px;
-  color: #405247;
-}
-
-.bv-dist-row div {
-  height: 4px;
-  background: #dfe8dd;
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.bv-dist-row i {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg, #0f7a3c, #2dbb6a);
-  border-radius: 999px;
-}
-
-.bv-dist-row b {
-  color: #0f7a3c;
-}
-
 .bv-semaforo {
   height: 100%;
   min-height: 0;
@@ -1061,94 +887,6 @@ const css = `
 
 .bv-semaforo-head span {
   font-size: 9.5px;
-  color: #68766d;
-}
-
-.bv-semaforo-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4px;
-  margin-bottom: 3px;
-}
-
-.bv-semaforo-grid div {
-  border-radius: 9px;
-  padding: 3px 5px;
-  background: #f7faf6;
-  border: 1px solid #e1eadf;
-}
-
-.bv-semaforo-grid small {
-  display: block;
-  font-size: 8px;
-  color: #68766d;
-  font-weight: 800;
-}
-
-.bv-semaforo-grid b {
-  font-size: 13px;
-  line-height: 1;
-}
-
-.bv-semaforo-grid .critico b { color: #c84a12; }
-.bv-semaforo-grid .medio b { color: #b7791f; }
-.bv-semaforo-grid .bajo b { color: #0f7a3c; }
-
-.bv-gestion {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 9px;
-  padding: 3px 6px;
-  margin-bottom: 3px;
-  background: #f7faf6;
-  border: 1px solid #e1eadf;
-}
-
-.bv-gestion small {
-  font-size: 8px;
-  color: #68766d;
-  font-weight: 900;
-}
-
-.bv-gestion strong {
-  font-size: 9px;
-  line-height: 1;
-}
-
-.bv-gestion.critico strong { color: #c84a12; }
-.bv-gestion.medio strong { color: #b7791f; }
-.bv-gestion.bajo strong { color: #0f7a3c; }
-
-.bv-critical-list {
-  display: grid;
-  gap: 2px;
-  max-height: 18px;
-  overflow: hidden;
-  padding-right: 3px;
-}
-
-.bv-critical-list div {
-  display: grid;
-  grid-template-columns: 66px 1fr;
-  gap: 5px;
-  align-items: center;
-  font-size: 8.6px;
-  color: #405247;
-}
-
-.bv-critical-list span {
-  color: #c84a12;
-  font-weight: 900;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.bv-critical-list small {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   color: #68766d;
 }
 
@@ -1190,8 +928,6 @@ const css = `
   font-size: 12px;
 }
 
-
-
 svg {
   width: 1em;
   height: 1em;
@@ -1199,6 +935,63 @@ svg {
 
 a {
   text-decoration: none;
+}
+
+.bv-gestion-table {
+  display: grid;
+  gap: 3px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.bv-gestion-row {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr .72fr .82fr .62fr .82fr;
+  gap: 4px;
+  align-items: center;
+  font-size: 8.4px;
+  padding: 3px 4px;
+  border-radius: 8px;
+  background: #f8fbf7;
+  border: 1px solid #e1eadf;
+}
+
+.bv-gestion-header {
+  background: #eef7ef;
+  color: #0b3b28;
+  font-weight: 900;
+}
+
+.bv-gestion-strong {
+  font-weight: 900;
+  color: #0f7a3c;
+}
+
+.bv-badge-estado {
+  min-width: 0;
+  border-radius: 999px;
+  padding: 2px 4px;
+  font-size: 7.8px;
+  font-weight: 900;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bv-badge-estado.ok {
+  background: #dff7e8;
+  color: #08713a;
+}
+
+.bv-badge-estado.medio {
+  background: #fff3d8;
+  color: #9a5b00;
+}
+
+.bv-badge-estado.pendiente {
+  background: #fde8df;
+  color: #b13a0b;
 }
 
 @media (max-width: 900px) {
@@ -1259,10 +1052,6 @@ a {
     height: 34px;
     justify-content: center;
     white-space: nowrap;
-  }
-
-  .bv-button-secondary {
-    display: none;
   }
 
   .bv-filters {
@@ -1338,77 +1127,10 @@ a {
     height: 44px;
   }
 
-  .bv-state h3 {
-    font-size: 22px;
-  }
-
   .bv-semaforo {
     height: auto;
     min-height: 128px;
     margin-top: 0;
   }
-
-  .bv-critical-list {
-    max-height: none;
-    overflow: visible;
-  }
-
-
-}
-.bv-gestion-table {
-  display: grid;
-  gap: 3px;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.bv-gestion-row {
-  display: grid;
-  grid-template-columns: 1.05fr 1fr .72fr .82fr .62fr .82fr;
-  gap: 4px;
-  align-items: center;
-  font-size: 8.4px;
-  padding: 3px 4px;
-  border-radius: 8px;
-  background: #f8fbf7;
-  border: 1px solid #e1eadf;
-}
-
-.bv-gestion-header {
-  background: #eef7ef;
-  color: #0b3b28;
-  font-weight: 900;
-}
-
-.bv-gestion-strong {
-  font-weight: 900;
-  color: #0f7a3c;
-}
-
-.bv-badge-estado {
-  min-width: 0;
-  border-radius: 999px;
-  padding: 2px 4px;
-  font-size: 7.8px;
-  font-weight: 900;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.bv-badge-estado.ok {
-  background: #dff7e8;
-  color: #08713a;
-}
-
-.bv-badge-estado.medio {
-  background: #fff3d8;
-  color: #9a5b00;
-}
-
-.bv-badge-estado.pendiente {
-  background: #fde8df;
-  color: #b13a0b;
 }
 `;
