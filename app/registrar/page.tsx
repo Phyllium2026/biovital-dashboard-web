@@ -15,13 +15,13 @@ export default function RegistrarPage() {
         </p>
 
         <a
-          href="https://docs.google.com/forms/d/e/18tqEnm3dwWAyzlbjDMMlsaJfdWyDmDxBmEC1G7WTAEc/viewform"
-          style={styles.primaryButton}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Registrar Censo
-        </a>
+  href="https://docs.google.com/forms/d/e/1FAIpQLSfAqtc-rQW1YJ9j5_vA-Dj6yEKBuPTLjiH9NADEFaRcwcv2tg/viewform?usp=header"
+  style={styles.primaryButton}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  Registrar Censo
+</a>
 
         <a
           href="https://docs.google.com/forms/d/1wGHBlVF1RpGrpDMlQbnPX1oCsdbzM_0w5FL6AQfXtMo/edit"
