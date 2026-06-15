@@ -197,9 +197,9 @@ export default function Home() {
   const totalVivos = filtrados.reduce((a, b) => a + b.vivos, 0);
   const totalMuertos = filtrados.reduce((a, b) => a + b.muertos, 0);
   const avance =
-    filtrados.length > 0
-      ? Math.round(filtrados.reduce((a, b) => a + b.avance, 0) / filtrados.length)
-      : 0;
+  totalVivos + totalMuertos > 0
+    ? (totalVivos / (totalVivos + totalMuertos)) * 100
+    : 0;
 
   const registrosVista = filtrados.slice(0, 6);
 
