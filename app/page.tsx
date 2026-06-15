@@ -226,13 +226,19 @@ export default function Home() {
       });
   }, [semaforo.registros, gestionPredio, gestionContrato, gestionResponsable]);
 
-  const gestionPendientes = compromisosGestion.filter((r) => r.etapa === 'Pendientes').length;
-  const gestionEjecucion = compromisosGestion.filter((r) => r.etapa === 'En ejecución').length;
-  const gestionCompletados = compromisosGestion.filter((r) => r.etapa === 'Completados').length;
-  const gestionCriticos = compromisosGestion.filter((r) =>
-    String(r.Semaforo || '').toLowerCase().includes('crítico') ||
-    String(r.Semaforo || '').toLowerCase().includes('critico')
+  const gestionPendientes = compromisosGestion.filter((r) =>
+    String(r.Estado_Censo || '').toLowerCase().includes('pendiente')
   ).length;
+
+  const gestionCompletados = compromisosGestion.filter(
+    (r) =>
+      esEjecutado(r.Estado_Censo) &&
+      esEjecutado(r.Estado_Informe) &&
+      esEjecutado(r.Revision_ITO) &&
+      esEjecutado(r.Carga_BioVital)
+  ).length;
+
+  const gestionEnGestion = compromisosGestion.length - gestionPendientes - gestionCompletados;
 
   return (
     <main className="bv-main">
@@ -345,9 +351,8 @@ export default function Home() {
 
             <section className="bv-gestion-kpis">
               <MiniKpi label="Pendientes" value={gestionPendientes} icon={<IconClock />} danger />
-              <MiniKpi label="En ejecución" value={gestionEjecucion} icon={<IconProgress />} />
+              <MiniKpi label="En gestión" value={gestionEnGestion} icon={<IconProgress />} />
               <MiniKpi label="Completados" value={gestionCompletados} icon={<IconCheck />} />
-              <MiniKpi label="Críticos" value={gestionCriticos} icon={<IconDown />} danger />
             </section>
 
             <div className="bv-semaforo">
@@ -367,7 +372,7 @@ export default function Home() {
                   <span>Obs.</span>
                 </div>
 
-                {compromisosGestion.map((r) => (
+                {compromisosGestion.slice(0, 6).map((r) => (
                   <div className="bv-gestion-row" key={`${r.Contrato_Compromiso}-${r.Predio}-${r.Fecha}`}>
                     <span className="bv-gestion-strong">{r.Contrato_Compromiso}</span>
                     <span>{r.Predio}</span>
@@ -722,7 +727,7 @@ const css = `
   display: grid;
   grid-template-columns: 1.28fr 1fr;
   gap: 8px;
-  align-items: start;
+  align-items: stretch;
   overflow: hidden;
 }
 
@@ -899,13 +904,12 @@ const css = `
 }
 
 .bv-exec {
-  height: auto;
-  max-height: 100%;
+  height: 100%;
   background: linear-gradient(145deg, #f8fff8, #edf7ed);
   display: grid;
-  grid-template-rows: 24px 46px 52px minmax(0, auto);
+  grid-template-rows: 24px 46px 52px minmax(0, 1fr);
   gap: 5px;
-  align-self: start;
+  align-self: stretch;
   overflow: hidden;
 }
 
@@ -949,7 +953,7 @@ const css = `
 }
 
 .bv-semaforo {
-  height: auto;
+  height: 100%;
   min-height: 0;
   background: white;
   border: 1px solid #e1eadf;
@@ -1018,7 +1022,7 @@ const css = `
 
 .bv-gestion-kpis {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 5px;
   min-height: 0;
 }
@@ -1120,10 +1124,7 @@ a {
   display: grid;
   gap: 3px;
   min-height: 0;
-  max-height: 318px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 3px;
+  overflow: hidden;
 }
 
 .bv-gestion-row {
@@ -1333,7 +1334,7 @@ a {
   }
 
   .bv-gestion-kpis {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     margin-bottom: 6px;
   }
 
@@ -1342,9 +1343,7 @@ a {
   }
 
   .bv-gestion-table {
-    max-height: none;
     overflow-x: auto;
-    overflow-y: visible;
   }
 
   .bv-gestion-row {
