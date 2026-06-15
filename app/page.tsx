@@ -257,28 +257,28 @@ export default function Home() {
           </div>
         </header>
 
-        <section className="bv-filters">
-          <Select label="Año" value={anio} options={unique('anio')} onChange={setAnio} icon={<IconCalendar />} />
-          <Select label="Predio" value={predio} options={unique('predio')} onChange={setPredio} icon={<IconPin />} />
-          <Select label="EECC" value={eecc} options={unique('eecc')} onChange={setEecc} icon={<IconBuilding />} />
-          <Select label="Especie" value={especie} options={unique('especie')} onChange={setEspecie} icon={<IconLeaf />} />
-        </section>
-
-        <section className="bv-kpis">
-          <Kpi icon={<IconFile />} title="Registros" value={loading ? '...' : formato(totalCensos)} />
-          <Kpi icon={<IconLeaf />} title="Vivas" value={loading ? '...' : formato(totalVivos)} />
-          <Kpi icon={<IconDown />} title="Reponer" value={loading ? '...' : formato(totalMuertos)} danger />
-          <Kpi icon={<IconProgress />} title="Prendimiento" value={loading ? '...' : pct(avance)} />
-          <Kpi icon={<IconMountain />} title="Predios" value={loading ? '...' : formato(new Set(filtrados.map((r) => r.predio)).size)} />
-          <Kpi icon={<IconShield />} title="Compromisos" value={loading ? '...' : formato(new Set(filtrados.map((r) => r.compromiso)).size)} />
-        </section>
-
         <section className="bv-content">
           <div className="bv-panel">
             <div className="bv-panel-head">
               <h2><IconList /> Resultados del Censo</h2>
               <span>{filtrados.length} registros</span>
             </div>
+
+            <section className="bv-censo-filters">
+              <Select label="Año" value={anio} options={unique('anio')} onChange={setAnio} icon={<IconCalendar />} />
+              <Select label="Predio" value={predio} options={unique('predio')} onChange={setPredio} icon={<IconPin />} />
+              <Select label="EECC" value={eecc} options={unique('eecc')} onChange={setEecc} icon={<IconBuilding />} />
+              <Select label="Especie" value={especie} options={unique('especie')} onChange={setEspecie} icon={<IconLeaf />} />
+            </section>
+
+            <section className="bv-censo-kpis">
+              <Kpi icon={<IconFile />} title="Registros" value={loading ? '...' : formato(totalCensos)} />
+              <Kpi icon={<IconLeaf />} title="Plantas vivas" value={loading ? '...' : formato(totalVivos)} />
+              <Kpi icon={<IconDown />} title="Plantas a reponer" value={loading ? '...' : formato(totalMuertos)} danger />
+              <Kpi icon={<IconProgress />} title="Prendimiento promedio" value={loading ? '...' : pct(avance)} />
+              <Kpi icon={<IconMountain />} title="Predios" value={loading ? '...' : formato(new Set(filtrados.map((r) => r.predio)).size)} />
+              <Kpi icon={<IconShield />} title="Compromisos" value={loading ? '...' : formato(new Set(filtrados.map((r) => r.compromiso)).size)} />
+            </section>
 
             <div className="bv-list">
               {registrosVista.map((r) => (
@@ -523,7 +523,7 @@ const css = `
   height: calc(100vh - 14px);
   margin: 0 auto;
   display: grid;
-  grid-template-rows: 72px 46px 50px minmax(0, 1fr) 34px;
+  grid-template-rows: 72px minmax(0, 1fr) 34px;
   gap: 5px;
 }
 
@@ -660,6 +660,32 @@ const css = `
   min-height: 0;
 }
 
+.bv-censo-filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  min-height: 0;
+  margin-bottom: 5px;
+}
+
+.bv-censo-filters .bv-filter {
+  height: 46px;
+  padding: 5px 8px;
+}
+
+.bv-censo-kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 52px);
+  gap: 6px;
+  min-height: 0;
+  margin-bottom: 6px;
+}
+
+.bv-censo-kpis .bv-kpi {
+  height: 52px;
+}
+
 .bv-kpi {
   height: 50px;
   background: white;
@@ -714,7 +740,7 @@ const css = `
   height: 100%;
   align-self: stretch;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto 46px 112px minmax(0, 1fr);
 }
 
 .bv-panel-head {
@@ -1212,13 +1238,21 @@ a {
     margin-bottom: 7px;
   }
 
+  .bv-censo-filters {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 7px;
+    margin-bottom: 7px;
+  }
+
   .bv-filter {
     height: 52px;
     padding: 7px 9px;
   }
 
-  .bv-kpis {
+  .bv-kpis,
+  .bv-censo-kpis {
     grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
     gap: 7px;
     margin-bottom: 8px;
   }
@@ -1242,6 +1276,10 @@ a {
   .bv-exec {
     padding: 10px;
     border-radius: 16px;
+  }
+
+  .bv-panel {
+    display: block;
   }
 
   .bv-card {
