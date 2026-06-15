@@ -372,7 +372,7 @@ export default function Home() {
                   <span>Obs.</span>
                 </div>
 
-                {compromisosGestion.slice(0, 6).map((r) => (
+                {compromisosGestion.map((r) => (
                   <div className="bv-gestion-row" key={`${r.Contrato_Compromiso}-${r.Predio}-${r.Fecha}`}>
                     <span className="bv-gestion-strong">{r.Contrato_Compromiso}</span>
                     <span>{r.Predio}</span>
@@ -907,7 +907,7 @@ const css = `
   height: 100%;
   background: linear-gradient(145deg, #f8fff8, #edf7ed);
   display: grid;
-  grid-template-rows: 24px 46px 52px minmax(0, 1fr);
+  grid-template-rows: auto auto auto minmax(0, 1fr);
   gap: 5px;
   align-self: stretch;
   overflow: hidden;
@@ -960,6 +960,8 @@ const css = `
   border-radius: 14px;
   padding: 5px 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,.03);
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
@@ -968,6 +970,7 @@ const css = `
   justify-content: space-between;
   align-items: center;
   margin-bottom: 3px;
+  flex: 0 0 auto;
 }
 
 .bv-semaforo-head strong {
@@ -1121,10 +1124,14 @@ a {
 }
 
 .bv-gestion-table {
+  flex: 1;
+  min-height: 0;
   display: grid;
   gap: 3px;
-  min-height: 0;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+  align-content: start;
 }
 
 .bv-gestion-row {
@@ -1143,6 +1150,9 @@ a {
   background: #eef7ef;
   color: #0b3b28;
   font-weight: 900;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .bv-gestion-strong {
@@ -1344,6 +1354,7 @@ a {
 
   .bv-gestion-table {
     overflow-x: auto;
+    overflow-y: visible;
   }
 
   .bv-gestion-row {
